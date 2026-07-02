@@ -40,7 +40,7 @@
   }
   a{color:inherit;text-decoration:none}
 
-  .layout{display:grid;grid-template-columns:340px 1fr;min-height:100vh;max-width:1320px;margin:0 auto}
+  .layout{display:grid;grid-template-columns:340px 1fr;min-height:100vh;margin:0 auto}
 
   /* ─────────── Sidebar ─────────── */
   .sidebar{
@@ -148,6 +148,16 @@
   .msg.visitor .bubble{
     background:var(--clay-tint);border-color:#ecd9cd;color:#5c3a28;
     border-radius:14px;border-top-right-radius:5px;
+  }
+  /* Agent replies: flat & uniform — no card contrast */
+  .msg.agent:not(.selfquery) .bubble{
+    background:transparent;border-color:transparent;
+    padding-left:0;padding-right:0;
+  }
+  /* Distinct treatment ONLY for self-queries (same warm tint as visitor questions) */
+  .msg.selfquery .bubble{
+    background:var(--clay-tint);border:1px solid #ecd9cd;color:#5c3a28;
+    border-radius:14px;
   }
   .bubble p{margin:0 0 9px}
   .bubble p:last-child{margin-bottom:0}
@@ -675,7 +685,7 @@ async function typeInto(el, text){
 }
 
 async function agentAsk(question){
-  const m=document.createElement('div'); m.className='msg agent';
+  const m=document.createElement('div'); m.className='msg agent selfquery';
   m.innerHTML=`<div class="av">AI</div><div class="body-wrap"><div class="who">Self-query</div><div class="bubble"></div></div>`;
   conv.appendChild(m); scrollDown();
   await typeInto(m.querySelector('.bubble'), question);

@@ -3,1048 +3,761 @@
 <head>
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>Avinash Pothireddy</title>
-<meta name="description" content="Lead Cloud SRE | Citibank | AWS, Kubernetes, Terraform, Chaos Engineering">
+<title>Avinash Reddy Pothireddy — Lead Site Reliability Engineer</title>
+<meta name="description" content="Avinash Reddy Pothireddy — Lead Site Reliability Engineer. AI & agentic automation, cloud reliability, observability, chaos engineering. Ask the agent anything.">
 <link rel="preconnect" href="https://fonts.googleapis.com">
-<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,300;0,400;0,500;0,600;0,700;1,400&display=swap" rel="stylesheet">
+<link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+<link href="https://fonts.googleapis.com/css2?family=Fraunces:opsz,wght@9..144,400;9..144,500;9..144,600&family=Inter:wght@400;450;500;600&family=JetBrains+Mono:wght@400;500&display=swap" rel="stylesheet">
 <style>
-/* ════════════════════════════════════════════════════════
-   AGENTIC PORTFOLIO — Obsidian Terminal
-   ════════════════════════════════════════════════════════ */
-
-:root {
-    --void: #06070a;
-    --obsidian: #0a0c12;
-    --slate: #0f1219;
-    --panel: #131720;
-    --surface: #181d28;
-    --border: rgba(255,255,255,0.05);
-    --border-hi: rgba(255,255,255,0.08);
-    --green: #00ff9d;
-    --green-dim: rgba(0,255,157,0.08);
-    --green-mid: rgba(0,255,157,0.15);
-    --green-glow: rgba(0,255,157,0.4);
-    --amber: #ffb800;
-    --amber-dim: rgba(255,184,0,0.1);
-    --cyan: #00d4ff;
-    --cyan-dim: rgba(0,212,255,0.08);
-    --red: #ff3b5c;
-    --text: #c8ccd8;
-    --text-dim: #6a7086;
-    --text-muted: #3d4258;
-    --mono: 'JetBrains Mono', 'Fira Code', 'Cascadia Code', monospace;
-}
-
-*, *::before, *::after { margin: 0; padding: 0; box-sizing: border-box; }
-
-html, body {
-    height: 100%;
-    overflow: hidden;
-    font-family: var(--mono);
-    background: var(--void);
-    color: var(--text);
-    -webkit-font-smoothing: antialiased;
-}
-
-/* ─── Scanline + CRT overlay ─── */
-body::after {
-    content: '';
-    position: fixed;
-    inset: 0;
-    z-index: 99999;
-    pointer-events: none;
-    background: repeating-linear-gradient(
-        0deg,
-        transparent,
-        transparent 2px,
-        rgba(0,0,0,0.03) 2px,
-        rgba(0,0,0,0.03) 4px
-    );
-}
-
-/* ─── Grid background ─── */
-.grid-bg {
-    position: fixed;
-    inset: 0;
-    z-index: 0;
-    opacity: 0.03;
-    background-image:
-        linear-gradient(var(--green) 1px, transparent 1px),
-        linear-gradient(90deg, var(--green) 1px, transparent 1px);
-    background-size: 60px 60px;
-}
-
-/* ─── Ambient glow ─── */
-.glow-1, .glow-2 {
-    position: fixed;
-    width: 500px;
-    height: 500px;
-    border-radius: 50%;
-    filter: blur(120px);
-    opacity: 0.07;
-    pointer-events: none;
-    z-index: 0;
-}
-.glow-1 { background: var(--green); top: -150px; right: -100px; }
-.glow-2 { background: var(--cyan); bottom: -200px; left: -150px; }
-
-/* ════ LAYOUT ════ */
-.app {
-    display: flex;
-    height: 100dvh;
-    position: relative;
-    z-index: 1;
-}
-
-/* ════ LEFT PANEL ════ */
-.left-panel {
-    width: 320px;
-    background: var(--obsidian);
-    border-right: 1px solid var(--border);
-    display: flex;
-    flex-direction: column;
-    flex-shrink: 0;
-    overflow: hidden;
-}
-
-.panel-header {
-    padding: 20px;
-    border-bottom: 1px solid var(--border);
-}
-
-.identity {
-    display: flex;
-    align-items: center;
-    gap: 14px;
-    margin-bottom: 14px;
-}
-
-.id-avatar {
-    width: 46px;
-    height: 46px;
-    border-radius: 10px;
-    background: linear-gradient(135deg, #00ff9d 0%, #00d4ff 100%);
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-weight: 700;
-    font-size: 15px;
-    color: var(--void);
-    position: relative;
-}
-
-.id-avatar::after {
-    content: '';
-    position: absolute;
-    inset: -2px;
-    border-radius: 12px;
-    background: linear-gradient(135deg, var(--green), var(--cyan));
-    z-index: -1;
-    opacity: 0.3;
-    filter: blur(6px);
-}
-
-.id-info h2 {
-    font-size: 13px;
-    font-weight: 600;
-    color: var(--text);
-    letter-spacing: 0.3px;
-}
-
-.id-role {
-    font-size: 10.5px;
-    color: var(--green);
-    margin-top: 2px;
-    opacity: 0.8;
-}
-
-.uptime-bar {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    padding: 8px 12px;
-    background: var(--green-dim);
-    border: 1px solid rgba(0,255,157,0.1);
-    border-radius: 8px;
-    font-size: 10.5px;
-}
-
-.uptime-dot {
-    width: 6px;
-    height: 6px;
-    border-radius: 50%;
-    background: var(--green);
-    box-shadow: 0 0 6px var(--green-glow);
-    animation: pulse 2s ease-in-out infinite;
-}
-
-@keyframes pulse {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0.4; }
-}
-
-.uptime-label { color: var(--green); font-weight: 500; }
-.uptime-val { color: var(--text-dim); margin-left: auto; }
-
-/* ─── Certifications ─── */
-.panel-section {
-    padding: 16px 20px;
-    border-bottom: 1px solid var(--border);
-}
-
-.section-head {
-    font-size: 9.5px;
-    text-transform: uppercase;
-    letter-spacing: 2px;
-    color: var(--text-muted);
-    margin-bottom: 12px;
-}
-
-.cert-grid {
-    display: flex;
-    flex-direction: column;
-    gap: 6px;
-}
-
-.cert-badge {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    padding: 9px 12px;
-    background: var(--slate);
-    border: 1px solid var(--border);
-    border-radius: 8px;
-    font-size: 11.5px;
-    color: var(--text);
-    transition: all 0.2s;
-    cursor: default;
-}
-
-.cert-badge:hover {
-    border-color: var(--green);
-    background: var(--green-dim);
-    box-shadow: 0 0 12px rgba(0,255,157,0.05);
-}
-
-.cert-icon {
-    width: 28px;
-    height: 28px;
-    border-radius: 6px;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    font-size: 13px;
-    flex-shrink: 0;
-    font-weight: 600;
-}
-
-.cert-icon.aws { background: var(--amber-dim); color: var(--amber); }
-.cert-icon.k8s { background: var(--cyan-dim); color: var(--cyan); }
-.cert-icon.hashi { background: var(--green-dim); color: var(--green); }
-
-.cert-name { font-weight: 500; flex: 1; }
-
-.cert-check {
-    font-size: 10px;
-    color: var(--green);
-    background: var(--green-dim);
-    padding: 2px 7px;
-    border-radius: 4px;
-    font-weight: 600;
-}
-
-/* ─── Tech Stack Bars ─── */
-.stack-list {
-    display: flex;
-    flex-direction: column;
-    gap: 10px;
-}
-
-.stack-item {
-    display: flex;
-    flex-direction: column;
-    gap: 5px;
-}
-
-.stack-meta {
-    display: flex;
-    justify-content: space-between;
-    font-size: 11px;
-}
-
-.stack-name { color: var(--text); font-weight: 500; }
-.stack-pct { color: var(--text-dim); }
-
-.stack-bar {
-    height: 4px;
-    background: var(--surface);
-    border-radius: 2px;
-    overflow: hidden;
-}
-
-.stack-fill {
-    height: 100%;
-    border-radius: 2px;
-    width: 0;
-    transition: width 1.5s cubic-bezier(0.22, 1, 0.36, 1);
-}
-
-.stack-fill.cloud { background: linear-gradient(90deg, var(--cyan), var(--green)); }
-.stack-fill.containers { background: linear-gradient(90deg, var(--green), #7cff6b); }
-.stack-fill.observability { background: linear-gradient(90deg, var(--amber), #ff6b35); }
-.stack-fill.automation { background: linear-gradient(90deg, #a78bfa, var(--cyan)); }
-.stack-fill.sre { background: linear-gradient(90deg, var(--red), var(--amber)); }
-
-/* ─── Links ─── */
-.panel-links {
-    margin-top: auto;
-    padding: 16px 20px;
-    border-top: 1px solid var(--border);
-    display: flex;
-    gap: 6px;
-}
-
-.p-link {
-    flex: 1;
-    display: flex;
-    align-items: center;
-    justify-content: center;
-    gap: 6px;
-    padding: 9px;
-    border-radius: 8px;
-    background: var(--slate);
-    border: 1px solid var(--border);
-    color: var(--text-dim);
-    text-decoration: none;
-    font-size: 10.5px;
-    font-weight: 500;
-    font-family: var(--mono);
-    transition: all 0.2s;
-}
-
-.p-link:hover {
-    color: var(--text);
-    border-color: var(--border-hi);
-    background: var(--surface);
-}
-
-.p-link svg { width: 14px; height: 14px; }
-
-/* ════ MAIN TERMINAL ════ */
-.terminal {
-    flex: 1;
-    display: flex;
-    flex-direction: column;
-    min-width: 0;
-    background: var(--void);
-}
-
-/* ─── Terminal header ─── */
-.term-header {
-    height: 48px;
-    padding: 0 24px;
-    border-bottom: 1px solid var(--border);
-    display: flex;
-    align-items: center;
-    gap: 16px;
-    flex-shrink: 0;
-}
-
-.term-dots {
-    display: flex;
-    gap: 6px;
-}
-
-.term-dot {
-    width: 10px;
-    height: 10px;
-    border-radius: 50%;
-}
-
-.term-dot.r { background: #ff5f57; }
-.term-dot.y { background: #febc2e; }
-.term-dot.g { background: #28c840; }
-
-.term-title {
-    font-size: 11.5px;
-    color: var(--text-dim);
-    flex: 1;
-    text-align: center;
-}
-
-.term-tag {
-    font-size: 10px;
-    color: var(--text-muted);
-    background: var(--panel);
-    padding: 3px 10px;
-    border-radius: 4px;
-    border: 1px solid var(--border);
-}
-
-/* ─── Terminal output ─── */
-.term-output {
-    flex: 1;
-    overflow-y: auto;
-    padding: 24px;
-    scroll-behavior: smooth;
-}
-
-.term-output::-webkit-scrollbar { width: 5px; }
-.term-output::-webkit-scrollbar-track { background: transparent; }
-.term-output::-webkit-scrollbar-thumb { background: rgba(255,255,255,0.06); border-radius: 3px; }
-
-/* ─── Log lines ─── */
-.log-line {
-    margin-bottom: 4px;
-    font-size: 13px;
-    line-height: 1.7;
-    opacity: 0;
-    animation: lineIn 0.3s ease forwards;
-}
-
-@keyframes lineIn {
-    from { opacity: 0; transform: translateX(-6px); }
-    to { opacity: 1; transform: translateX(0); }
-}
-
-.log-line .timestamp {
-    color: var(--text-muted);
-    margin-right: 10px;
-    font-size: 11px;
-}
-
-.log-line .prefix {
-    font-weight: 600;
-    margin-right: 6px;
-}
-
-.prefix.agent { color: var(--cyan); }
-.prefix.system { color: var(--amber); }
-.prefix.result { color: var(--green); }
-.prefix.error { color: var(--red); }
-.prefix.user { color: #a78bfa; }
-
-.log-line .content { color: var(--text); }
-.log-line .dim { color: var(--text-dim); }
-.log-line .hl { color: var(--green); font-weight: 500; }
-.log-line .cyan { color: var(--cyan); }
-.log-line .amber { color: var(--amber); }
-
-/* Separator */
-.log-sep {
-    border: none;
-    border-top: 1px solid var(--border);
-    margin: 16px 0;
-    opacity: 0;
-    animation: lineIn 0.3s ease forwards;
-}
-
-/* Thinking animation */
-.thinking-line {
-    display: flex;
-    align-items: center;
-    gap: 8px;
-    margin-bottom: 4px;
-    font-size: 13px;
-    animation: lineIn 0.3s ease forwards;
-}
-
-.thinking-line .spinner {
-    display: inline-flex;
-    gap: 3px;
-}
-
-.thinking-line .spinner span {
-    width: 4px;
-    height: 4px;
-    border-radius: 50%;
-    background: var(--amber);
-    animation: spinBounce 1s ease-in-out infinite;
-}
-
-.thinking-line .spinner span:nth-child(2) { animation-delay: 0.12s; }
-.thinking-line .spinner span:nth-child(3) { animation-delay: 0.24s; }
-
-@keyframes spinBounce {
-    0%, 70%, 100% { opacity: 0.2; transform: scale(0.8); }
-    35% { opacity: 1; transform: scale(1.2); }
-}
-
-/* ─── Command input ─── */
-.term-input-area {
-    flex-shrink: 0;
-    padding: 16px 24px;
-    border-top: 1px solid var(--border);
-    background: var(--obsidian);
-}
-
-.input-row {
-    display: flex;
-    align-items: center;
-    gap: 10px;
-    max-width: 900px;
-    margin: 0 auto;
-}
-
-.input-prompt {
-    font-size: 13px;
-    color: var(--green);
-    font-weight: 600;
-    white-space: nowrap;
-    flex-shrink: 0;
-}
-
-.term-input {
-    flex: 1;
-    background: transparent;
-    border: none;
-    outline: none;
-    color: var(--text);
-    font-family: var(--mono);
-    font-size: 13px;
-    caret-color: var(--green);
-}
-
-.term-input::placeholder { color: var(--text-muted); }
-
-.term-input-hint {
-    text-align: center;
-    font-size: 10px;
-    color: var(--text-muted);
-    margin-top: 10px;
-    opacity: 0.5;
-}
-
-/* ─── Mobile ─── */
-.mobile-toggle {
-    display: none;
-    position: fixed;
-    top: 10px;
-    left: 10px;
-    z-index: 1001;
-    width: 36px;
-    height: 36px;
-    border-radius: 8px;
-    border: 1px solid var(--border);
-    background: var(--panel);
-    color: var(--text-dim);
-    cursor: pointer;
-    align-items: center;
-    justify-content: center;
-}
-
-.mobile-toggle svg { width: 18px; height: 18px; }
-.mobile-overlay { display: none; position: fixed; inset: 0; background: rgba(0,0,0,0.7); z-index: 999; }
-
-@media (max-width: 768px) {
-    .left-panel {
-        position: fixed;
-        left: 0; top: 0; bottom: 0;
-        z-index: 1000;
-        transform: translateX(-100%);
-        transition: transform 0.3s ease;
+  :root{
+    --bg:#f4f1ea;
+    --surface:#faf9f5;
+    --sidebar:#efece2;
+    --bubble:#ffffff;
+    --ink:#29261f;
+    --ink-2:#6f695c;
+    --ink-3:#98917f;
+    --line:#e4dfd1;
+    --line-2:#ded8c8;
+    --clay:#d97757;
+    --clay-deep:#bf5c39;
+    --clay-tint:#f4e6dd;
+    --ok:#7a8b5a;
+    --radius:16px;
+    --mono:'JetBrains Mono',ui-monospace,SFMono-Regular,Menlo,monospace;
+    --serif:'Fraunces',Georgia,'Times New Roman',serif;
+    --sans:'Inter',-apple-system,BlinkMacSystemFont,'Segoe UI',Roboto,sans-serif;
+  }
+  *{box-sizing:border-box;margin:0;padding:0}
+  html{scroll-behavior:smooth}
+  body{
+    font-family:var(--sans);
+    background:var(--bg);
+    color:var(--ink);
+    line-height:1.55;
+    -webkit-font-smoothing:antialiased;
+    font-size:15px;
+  }
+  a{color:inherit;text-decoration:none}
+
+  .layout{display:grid;grid-template-columns:340px 1fr;min-height:100vh;max-width:1320px;margin:0 auto}
+
+  /* ─────────── Sidebar ─────────── */
+  .sidebar{
+    background:var(--sidebar);
+    border-right:1px solid var(--line);
+    padding:34px 28px 28px;
+    display:flex;flex-direction:column;gap:24px;
+    position:sticky;top:0;height:100vh;overflow-y:auto;
+  }
+  .monogram{
+    width:56px;height:56px;border-radius:14px;
+    background:var(--clay);color:#fff;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--serif);font-size:22px;font-weight:600;letter-spacing:.5px;
+    box-shadow:0 6px 18px -8px rgba(191,92,57,.6);
+  }
+  .name{font-family:var(--serif);font-size:26px;line-height:1.15;font-weight:500;letter-spacing:-.01em;margin-top:14px}
+  .role{color:var(--ink-2);font-size:14px;margin-top:5px;font-weight:450}
+  .loc{color:var(--ink-3);font-size:13px;margin-top:8px;display:flex;align-items:center;gap:6px}
+  .loc svg{width:13px;height:13px;opacity:.75}
+
+  .status-pill{
+    display:inline-flex;align-items:center;gap:7px;
+    background:var(--clay-tint);color:var(--clay-deep);
+    font-size:12px;font-weight:500;padding:6px 12px;border-radius:999px;
+    width:fit-content;letter-spacing:.01em;
+  }
+  .dot{width:7px;height:7px;border-radius:50%;background:var(--ok);position:relative}
+  .dot::after{content:"";position:absolute;inset:-4px;border-radius:50%;background:var(--ok);opacity:.35;animation:ping 2s ease-out infinite}
+  @keyframes ping{0%{transform:scale(.6);opacity:.5}100%{transform:scale(2.2);opacity:0}}
+
+  .bio{font-size:13.5px;color:var(--ink-2);line-height:1.6}
+
+  .side-label{
+    font-family:var(--mono);font-size:10.5px;letter-spacing:.14em;
+    text-transform:uppercase;color:var(--ink-3);margin-bottom:11px;
+  }
+  .divider{height:1px;background:var(--line-2)}
+
+  .links{display:flex;flex-direction:column;gap:2px}
+  .link{
+    display:flex;align-items:center;gap:11px;
+    padding:8px 10px;border-radius:10px;font-size:13.5px;color:var(--ink);
+    transition:background .15s,color .15s;
+  }
+  .link:hover{background:#e6e1d4}
+  .link svg{width:16px;height:16px;color:var(--ink-2);flex-shrink:0}
+  .link:hover svg{color:var(--clay-deep)}
+
+  .certs{display:flex;flex-direction:column;gap:8px}
+  .cert{font-size:12.5px;color:var(--ink-2);display:flex;gap:9px;align-items:flex-start;line-height:1.4}
+  .cert::before{content:"";width:5px;height:5px;border-radius:50%;background:var(--clay);margin-top:7px;flex-shrink:0}
+
+  .tags{display:flex;flex-wrap:wrap;gap:6px}
+  .tag{
+    font-family:var(--mono);font-size:11px;color:var(--ink-2);
+    background:var(--surface);border:1px solid var(--line);
+    padding:4px 9px;border-radius:7px;
+  }
+  .side-foot{font-size:11px;color:var(--ink-3);margin-top:auto;line-height:1.5}
+
+  /* ─────────── Chat ─────────── */
+  .chat{display:flex;flex-direction:column;height:100vh;position:relative}
+  .chat-header{
+    padding:20px 32px;border-bottom:1px solid var(--line);
+    display:flex;align-items:center;gap:14px;background:var(--bg);
+    position:sticky;top:0;z-index:5;
+  }
+  .chat-avatar{
+    width:34px;height:34px;border-radius:9px;background:var(--clay);
+    display:flex;align-items:center;justify-content:center;flex-shrink:0;
+  }
+  .chat-avatar svg{width:18px;height:18px;color:#fff}
+  .chat-title{font-size:15px;font-weight:600}
+  .chat-sub{font-size:12.5px;color:var(--ink-3);display:flex;align-items:center;gap:6px}
+
+  .conversation{
+    flex:1;overflow-y:auto;padding:30px 32px 12px;
+    display:flex;flex-direction:column;gap:22px;
+    scroll-behavior:smooth;
+  }
+  .conversation::-webkit-scrollbar{width:9px}
+  .conversation::-webkit-scrollbar-thumb{background:var(--line-2);border-radius:9px;border:3px solid var(--bg)}
+
+  .msg{display:flex;gap:13px;max-width:760px;animation:rise .4s cubic-bezier(.2,.7,.3,1)}
+  @keyframes rise{from{opacity:0;transform:translateY(8px)}to{opacity:1;transform:none}}
+  .msg .av{
+    width:30px;height:30px;border-radius:8px;flex-shrink:0;
+    display:flex;align-items:center;justify-content:center;
+    font-family:var(--mono);font-size:11px;font-weight:500;margin-top:2px;
+  }
+  .msg.agent .av{background:var(--clay);color:#fff}
+  .msg.visitor{margin-left:auto;flex-direction:row-reverse}
+  .msg.visitor .av{background:#dfd9ca;color:var(--ink-2)}
+  .msg.system{justify-content:center;max-width:100%}
+
+  .body-wrap{min-width:0}
+  .who{font-size:11.5px;color:var(--ink-3);margin-bottom:5px;font-weight:500;letter-spacing:.01em}
+  .msg.visitor .who{text-align:right}
+  .bubble{
+    background:var(--bubble);border:1px solid var(--line);
+    padding:13px 16px;border-radius:14px;border-top-left-radius:5px;
+    font-size:14.5px;color:var(--ink);line-height:1.62;
+  }
+  .msg.visitor .bubble{
+    background:var(--clay-tint);border-color:#ecd9cd;color:#5c3a28;
+    border-radius:14px;border-top-right-radius:5px;
+  }
+  .bubble p{margin:0 0 9px}
+  .bubble p:last-child{margin-bottom:0}
+  .bubble strong{font-weight:600;color:var(--ink)}
+  .bubble .k{font-family:var(--mono);font-size:12.5px;background:#f0ece1;padding:1px 6px;border-radius:5px;color:var(--clay-deep)}
+  .bubble ul{margin:6px 0 4px;padding-left:2px;list-style:none;display:flex;flex-direction:column;gap:5px}
+  .bubble li{position:relative;padding-left:16px}
+  .bubble li::before{content:"→";position:absolute;left:0;color:var(--clay);font-size:12px;top:1px}
+  .bubble a{color:var(--clay-deep);border-bottom:1px solid #e6c4b3}
+  .bubble .exp{display:flex;flex-direction:column;gap:2px;margin:8px 0}
+  .bubble .exp .co{font-weight:600}
+  .bubble .exp .meta{font-family:var(--mono);font-size:11.5px;color:var(--ink-3)}
+
+  /* thinking shimmer */
+  .thinking{display:flex;align-items:center;gap:9px;padding:2px 0}
+  .think-verb{
+    font-family:var(--serif);font-size:15px;font-style:italic;
+    background:linear-gradient(100deg,var(--ink-3) 20%,var(--clay) 45%,var(--clay-deep) 55%,var(--ink-3) 80%);
+    background-size:220% auto;-webkit-background-clip:text;background-clip:text;
+    -webkit-text-fill-color:transparent;color:transparent;
+    animation:shimmer 2.1s linear infinite;
+  }
+  @keyframes shimmer{to{background-position:-220% center}}
+  .think-dots{display:flex;gap:4px}
+  .think-dots i{width:5px;height:5px;border-radius:50%;background:var(--clay);opacity:.4;animation:bob 1.1s ease-in-out infinite}
+  .think-dots i:nth-child(2){animation-delay:.15s}
+  .think-dots i:nth-child(3){animation-delay:.3s}
+  @keyframes bob{0%,100%{opacity:.3;transform:translateY(0)}50%{opacity:1;transform:translateY(-3px)}}
+
+  .sys-note{
+    font-family:var(--mono);font-size:11px;color:var(--ink-3);
+    letter-spacing:.02em;text-align:center;padding:2px 14px;
+    display:flex;align-items:center;gap:10px;
+  }
+  .sys-note::before,.sys-note::after{content:"";height:1px;width:32px;background:var(--line-2)}
+
+  .cursor{display:inline-block;width:7px;height:15px;background:var(--clay);margin-left:1px;vertical-align:-2px;animation:blink 1s step-end infinite}
+  @keyframes blink{50%{opacity:0}}
+
+  /* composer */
+  .composer{padding:14px 32px 22px;border-top:1px solid var(--line);background:var(--bg)}
+  .chips{display:flex;flex-wrap:wrap;gap:7px;margin-bottom:12px}
+  .chip{
+    font-size:12.5px;color:var(--ink-2);background:var(--surface);
+    border:1px solid var(--line);padding:6px 12px;border-radius:999px;cursor:pointer;
+    transition:all .15s;
+  }
+  .chip:hover{border-color:var(--clay);color:var(--clay-deep);background:#fff}
+  .input-row{
+    display:flex;align-items:center;gap:10px;background:var(--surface);
+    border:1px solid var(--line-2);border-radius:14px;padding:6px 6px 6px 16px;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .input-row:focus-within{border-color:var(--clay);box-shadow:0 0 0 3px rgba(217,119,87,.12)}
+  #termInput{
+    flex:1;border:none;background:none;outline:none;
+    font-family:var(--sans);font-size:14.5px;color:var(--ink);padding:7px 0;
+  }
+  #termInput::placeholder{color:var(--ink-3)}
+  .send{
+    width:38px;height:38px;border-radius:10px;border:none;cursor:pointer;
+    background:var(--clay);display:flex;align-items:center;justify-content:center;
+    transition:background .15s,transform .1s;
+  }
+  .send:hover{background:var(--clay-deep)}
+  .send:active{transform:scale(.94)}
+  .send:disabled{background:#d8d2c4;cursor:default}
+  .send svg{width:18px;height:18px;color:#fff}
+  .foot-hint{font-size:11px;color:var(--ink-3);text-align:center;margin-top:10px}
+
+  /* mobile */
+  .mobile-bar{display:none}
+  .overlay{display:none}
+  @media(max-width:860px){
+    .layout{grid-template-columns:1fr}
+    .mobile-bar{
+      display:flex;align-items:center;justify-content:space-between;
+      padding:12px 18px;background:var(--sidebar);border-bottom:1px solid var(--line);
+      position:sticky;top:0;z-index:30;
     }
-    .left-panel.open { transform: translateX(0); }
-    .mobile-overlay.active { display: block; }
-    .mobile-toggle { display: flex; }
-    .term-header { padding-left: 56px; }
-    .term-output { padding: 16px; }
-    .term-input-area { padding: 12px 16px; }
-    .log-line { font-size: 12px; }
-    .log-line .timestamp { display: none; }
-}
-
-/* ─── Cursor blink ─── */
-.cursor {
-    display: inline-block;
-    width: 8px;
-    height: 15px;
-    background: var(--green);
-    margin-left: 2px;
-    vertical-align: text-bottom;
-    animation: blink 1s step-end infinite;
-}
-
-@keyframes blink {
-    0%, 100% { opacity: 1; }
-    50% { opacity: 0; }
-}
+    .mobile-bar .mb-name{font-family:var(--serif);font-size:16px;font-weight:500}
+    .burger{background:none;border:1px solid var(--line-2);border-radius:9px;padding:7px 9px;cursor:pointer;display:flex}
+    .burger svg{width:18px;height:18px;color:var(--ink)}
+    .sidebar{
+      position:fixed;left:0;top:0;z-index:40;width:310px;max-width:86vw;height:100vh;
+      transform:translateX(-100%);transition:transform .28s cubic-bezier(.2,.7,.3,1);
+      box-shadow:0 0 40px rgba(0,0,0,.14);
+    }
+    .sidebar.open{transform:none}
+    .overlay.show{display:block;position:fixed;inset:0;background:rgba(41,38,31,.4);z-index:35}
+    .chat{height:calc(100vh - 49px)}
+    .chat-header{padding:16px 20px}
+    .conversation{padding:22px 18px 10px}
+    .composer{padding:12px 18px 18px}
+    .msg{max-width:100%}
+  }
+  @media(prefers-reduced-motion:reduce){
+    *{animation-duration:.001s!important;scroll-behavior:auto!important}
+    .think-verb{-webkit-text-fill-color:var(--clay-deep);color:var(--clay-deep)}
+  }
 </style>
 </head>
 <body>
 
-<div class="grid-bg"></div>
-<div class="glow-1"></div>
-<div class="glow-2"></div>
+<div class="mobile-bar">
+  <span class="mb-name">Avinash R. Pothireddy</span>
+  <button class="burger" id="burger" aria-label="Open profile">
+    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M4 6h16M4 12h16M4 18h16"/></svg>
+  </button>
+</div>
+<div class="overlay" id="overlay"></div>
 
-<button class="mobile-toggle" id="mobileToggle" aria-label="Menu">
-    <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><line x1="3" y1="6" x2="21" y2="6"/><line x1="3" y1="12" x2="21" y2="12"/><line x1="3" y1="18" x2="21" y2="18"/></svg>
-</button>
-<div class="mobile-overlay" id="mobileOverlay"></div>
+<div class="layout">
+  <!-- ───── Sidebar ───── -->
+  <aside class="sidebar" id="sidebar">
+    <div>
+      <div class="monogram">AP</div>
+      <h1 class="name">Avinash Reddy<br>Pothireddy</h1>
+      <div class="role">Lead Site Reliability Engineer</div>
+      <div class="loc">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M12 21s7-6.5 7-12a7 7 0 1 0-14 0c0 5.5 7 12 7 12z"/><circle cx="12" cy="9" r="2.5"/></svg>
+        Aubrey, Texas, USA
+      </div>
+      <div class="status-pill" style="margin-top:14px"><span class="dot"></span>Open to opportunities</div>
+    </div>
 
-<div class="app">
-    <!-- ════ LEFT PANEL ════ -->
-    <aside class="left-panel" id="leftPanel">
-        <div>
-            <div class="panel-header">
-                <div class="identity">
-                    <div class="id-avatar">AP</div>
-                    <div class="id-info">
-                        <h2>Avinash R. Pothireddy</h2>
-                        <div class="id-role">Lead Cloud SRE @ Citibank</div>
-                    </div>
-                </div>
-                <div class="uptime-bar">
-                    <span class="uptime-dot"></span>
-                    <span class="uptime-label">System Uptime</span>
-                    <span class="uptime-val" id="uptimeVal">99.99%</span>
-                </div>
-            </div>
+    <p class="bio">8+ years keeping business-critical cloud systems for top financial institutions available and fault-tolerant — now bringing AI agents and MCP into the operations loop.</p>
 
-            <!-- Certifications -->
-            <div class="panel-section">
-                <div class="section-head">✓ Validated Certifications</div>
-                <div class="cert-grid">
-                    <div class="cert-badge">
-                        <span class="cert-icon aws">λ</span>
-                        <span class="cert-name">AWS Solutions Architect</span>
-                        <span class="cert-check">✓</span>
-                    </div>
-                    <div class="cert-badge">
-                        <span class="cert-icon k8s">☸</span>
-                        <span class="cert-name">CKA — Kubernetes Admin</span>
-                        <span class="cert-check">✓</span>
-                    </div>
-                    <div class="cert-badge">
-                        <span class="cert-icon hashi">⬡</span>
-                        <span class="cert-name">HashiCorp Terraform</span>
-                        <span class="cert-check">✓</span>
-                    </div>
-                </div>
-            </div>
+    <div class="divider"></div>
 
-            <!-- Tech Stack -->
-            <div class="panel-section">
-                <div class="section-head">◈ Mastery Index</div>
-                <div class="stack-list">
-                    <div class="stack-item">
-                        <div class="stack-meta"><span class="stack-name">Cloud (AWS/GCP)</span><span class="stack-pct">96%</span></div>
-                        <div class="stack-bar"><div class="stack-fill cloud" data-width="96"></div></div>
-                    </div>
-                    <div class="stack-item">
-                        <div class="stack-meta"><span class="stack-name">Containers & K8s</span><span class="stack-pct">93%</span></div>
-                        <div class="stack-bar"><div class="stack-fill containers" data-width="93"></div></div>
-                    </div>
-                    <div class="stack-item">
-                        <div class="stack-meta"><span class="stack-name">Observability</span><span class="stack-pct">90%</span></div>
-                        <div class="stack-bar"><div class="stack-fill observability" data-width="90"></div></div>
-                    </div>
-                    <div class="stack-item">
-                        <div class="stack-meta"><span class="stack-name">Python & Automation</span><span class="stack-pct">88%</span></div>
-                        <div class="stack-bar"><div class="stack-fill automation" data-width="88"></div></div>
-                    </div>
-                    <div class="stack-item">
-                        <div class="stack-meta"><span class="stack-name">SRE & Chaos Eng</span><span class="stack-pct">92%</span></div>
-                        <div class="stack-bar"><div class="stack-fill sre" data-width="92"></div></div>
-                    </div>
-                </div>
-            </div>
-        </div>
+    <div>
+      <div class="side-label">Connect</div>
+      <div class="links">
+        <a class="link" href="mailto:arpothireddy@gmail.com">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><rect x="3" y="5" width="18" height="14" rx="2"/><path d="m3 7 9 6 9-6"/></svg>
+          arpothireddy@gmail.com
+        </a>
+        <a class="link" href="https://github.com/arpothireddy" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 2C6.48 2 2 6.58 2 12.25c0 4.53 2.87 8.37 6.84 9.73.5.1.68-.22.68-.49v-1.7c-2.78.62-3.37-1.37-3.37-1.37-.45-1.18-1.11-1.5-1.11-1.5-.91-.63.07-.62.07-.62 1 .07 1.53 1.06 1.53 1.06.9 1.56 2.35 1.11 2.92.85.09-.66.35-1.11.63-1.37-2.22-.26-4.55-1.13-4.55-5.03 0-1.11.39-2.02 1.03-2.73-.1-.26-.45-1.3.1-2.7 0 0 .84-.28 2.75 1.04a9.3 9.3 0 0 1 5 0c1.91-1.32 2.75-1.04 2.75-1.04.55 1.4.2 2.44.1 2.7.64.71 1.03 1.62 1.03 2.73 0 3.91-2.34 4.77-4.57 5.02.36.32.68.94.68 1.9v2.82c0 .27.18.6.69.49A10.02 10.02 0 0 0 22 12.25C22 6.58 17.52 2 12 2z"/></svg>
+          github.com/arpothireddy
+        </a>
+        <a class="link" href="https://www.linkedin.com/in/avinashpothireddy" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="currentColor"><path d="M4.98 3.5a2.5 2.5 0 1 1 0 5 2.5 2.5 0 0 1 0-5zM3 9h4v12H3zM9 9h3.8v1.7h.05c.53-1 1.83-2.05 3.77-2.05C20.5 8.65 22 10.8 22 14v7h-4v-6.2c0-1.48-.03-3.38-2.06-3.38-2.06 0-2.38 1.6-2.38 3.27V21H9z"/></svg>
+          linkedin.com/in/avinashpothireddy
+        </a>
+        <a class="link" href="Avinash_Pothireddy.pdf" target="_blank" rel="noopener">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.8"><path d="M14 3v5h5"/><path d="M14 3H6a2 2 0 0 0-2 2v14a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M12 12v6m0 0-2.5-2.5M12 18l2.5-2.5"/></svg>
+          Résumé (PDF)
+        </a>
+      </div>
+    </div>
 
-        <div class="panel-links">
-            <a href="https://github.com/arpothireddy" target="_blank" class="p-link">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 0C5.37 0 0 5.37 0 12c0 5.31 3.435 9.795 8.205 11.385.6.105.825-.255.825-.57 0-.285-.015-1.23-.015-2.235-3.015.555-3.795-.735-4.035-1.41-.135-.345-.72-1.41-1.23-1.695-.42-.225-1.02-.78-.015-.795.945-.015 1.62.87 1.845 1.23 1.08 1.815 2.805 1.305 3.495.99.105-.78.42-1.305.765-1.605-2.67-.3-5.46-1.335-5.46-5.925 0-1.305.465-2.385 1.23-3.225-.12-.3-.54-1.53.12-3.18 0 0 1.005-.315 3.3 1.23.96-.27 1.98-.405 3-.405s2.04.135 3 .405c2.295-1.56 3.3-1.23 3.3-1.23.66 1.65.24 2.88.12 3.18.765.84 1.23 1.905 1.23 3.225 0 4.605-2.805 5.625-5.475 5.925.435.375.81 1.095.81 2.22 0 1.605-.015 2.895-.015 3.3 0 .315.225.69.825.57A12.02 12.02 0 0024 12c0-6.63-5.37-12-12-12z"/></svg>
-                GitHub
-            </a>
-            <a href="https://www.linkedin.com/in/avinashpothireddy/" target="_blank" class="p-link">
-                <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.447 20.452h-3.554v-5.569c0-1.328-.027-3.037-1.852-3.037-1.853 0-2.136 1.445-2.136 2.939v5.667H9.351V9h3.414v1.561h.046c.477-.9 1.637-1.85 3.37-1.85 3.601 0 4.267 2.37 4.267 5.455v6.286zM5.337 7.433a2.062 2.062 0 01-2.063-2.065 2.064 2.064 0 112.063 2.065zm1.782 13.019H3.555V9h3.564v11.452zM22.225 0H1.771C.792 0 0 .774 0 1.729v20.542C0 23.227.792 24 1.771 24h20.451C23.2 24 24 23.227 24 22.271V1.729C24 .774 23.2 0 22.222 0h.003z"/></svg>
-                LinkedIn
-            </a>
-            <a href="https://drive.google.com/file/d/1YLKRXfLn-3ew8o60AynEn4JP5V1uP8c_/view?usp=drive_link" target="_blank" class="p-link">
-                <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><polyline points="14 2 14 8 20 8"/></svg>
-                Resume
-            </a>
-        </div>
-    </aside>
+    <div class="divider"></div>
 
-    <!-- ════ TERMINAL ════ -->
-    <main class="terminal">
-        <div class="term-header">
-            <div class="term-dots">
-                <span class="term-dot r"></span>
-                <span class="term-dot y"></span>
-                <span class="term-dot g"></span>
-            </div>
-            <span class="term-title">agent@avinash-portfolio ~ (self-query mode)</span>
-            <span class="term-tag">v2.0.26</span>
-        </div>
+    <div>
+      <div class="side-label">Certifications</div>
+      <div class="certs">
+        <div class="cert">AWS Solutions Architect — Associate</div>
+        <div class="cert">CKA — Certified Kubernetes Administrator</div>
+        <div class="cert">HashiCorp Terraform Associate</div>
+        <div class="cert">Gremlin Certified Chaos Engineering Professional</div>
+        <div class="cert">Splunk Core Certified Power User</div>
+        <div class="cert">Anthropic — MCP (Intro &amp; Advanced), AI Fluency, Agent Skills, Claude on Vertex AI</div>
+      </div>
+    </div>
 
-        <div class="term-output" id="output"></div>
+    <div class="divider"></div>
 
-        <div class="term-input-area">
-            <div class="input-row">
-                <span class="input-prompt">visitor@portfolio:~$</span>
-                <input type="text" class="term-input" id="termInput" placeholder="ask me anything about Avinash..." autocomplete="off">
-            </div>
-            <div class="term-input-hint">Press Enter to query · Tab for suggestions · Uptime 99.99%</div>
-        </div>
-    </main>
+    <div>
+      <div class="side-label">Core Stack</div>
+      <div class="tags">
+        <span class="tag">AWS</span><span class="tag">GCP</span><span class="tag">Azure</span>
+        <span class="tag">Kubernetes</span><span class="tag">Terraform</span><span class="tag">Python</span>
+        <span class="tag">MCP</span><span class="tag">AI Agents</span><span class="tag">Splunk</span>
+        <span class="tag">Grafana</span><span class="tag">Chaos Eng</span><span class="tag">SLOs</span>
+      </div>
+    </div>
+
+    <div class="side-foot">Master's, Computer &amp; Information Science — Kent State University</div>
+  </aside>
+
+  <!-- ───── Chat ───── -->
+  <main class="chat">
+    <div class="chat-header">
+      <div class="chat-avatar">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="1.9"><path d="M12 3v2m0 14v2M5.6 5.6l1.4 1.4m10 10 1.4 1.4M3 12h2m14 0h2M5.6 18.4l1.4-1.4m10-10 1.4-1.4"/><circle cx="12" cy="12" r="3.2"/></svg>
+      </div>
+      <div>
+        <div class="chat-title">Avi's Portfolio Agent</div>
+        <div class="chat-sub"><span class="dot"></span>Ask me anything about Avinash</div>
+      </div>
+    </div>
+
+    <div class="conversation" id="conversation"></div>
+
+    <div class="composer">
+      <div class="chips" id="chips"></div>
+      <div class="input-row">
+        <input id="termInput" type="text" placeholder="Ask about experience, AI/agent work, a specific tool…" autocomplete="off">
+        <button class="send" id="sendBtn" aria-label="Send">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
+        </button>
+      </div>
+      <div class="foot-hint">This agent answers from Avinash's résumé — recruiters, ask away.</div>
+    </div>
+  </main>
 </div>
 
 <script>
-// ════════════════════════════════════════════════════════
-// AGENTIC PORTFOLIO ENGINE
-// ════════════════════════════════════════════════════════
-
-const output = document.getElementById('output');
-const termInput = document.getElementById('termInput');
-let isTyping = false;
-
-// ─── Knowledge Base ───
+/* ══════════════════════ KNOWLEDGE BASE (source of truth: résumé) ══════════════════════ */
 const KB = {
-    name: "Avinash Reddy Pothireddy",
-    role: "Lead Cloud SRE",
-    company: "Citibank",
-    location: "Texas, USA",
-    goal: "Actively seeking relocation to the EU",
-    education: "MSc in Computer Information Sciences from Kent State University",
-    experience: [
-        { role: "Lead Cloud SRE", company: "Citibank", detail: "Managing 700+ AWS/GCP accounts, leading GenAI/MCP integrations, orchestrating multi-cloud reliability at enterprise scale." },
-        { role: "Site Reliability Engineer", company: "JPMorgan Chase & Co.", detail: "Automated Chaos Engineering frameworks using AWS FIS and Gremlin, reducing testing time by 40%. Built SLO dashboards tracking 200+ services." },
-        { role: "Site Reliability Engineer", company: "Apple Inc.", detail: "Maintained 99.99% uptime for critical services. Developed Python-based automation reducing manual toil by 60%." }
-    ],
-    certs: ["AWS Solutions Architect", "Certified Kubernetes Administrator (CKA)", "HashiCorp Terraform Associate"],
-    skills: {
-        cloud: "AWS (EKS, Lambda, S3, IAM, EC2, FIS), GCP (GKE, Cloud Functions), Azure (AKS, VMs)",
-        containers: "Kubernetes, Docker, Helm, ArgoCD, service mesh (Istio)",
-        observability: "Prometheus, Grafana, Splunk, Datadog, OpenTelemetry, SLIs/SLOs/Error Budgets",
-        automation: "Python (Flask, Django), Terraform, Ansible, CloudFormation, Bash, GitHub Actions, Jenkins",
-        sre: "Chaos Engineering (Gremlin, AWS FIS), incident management, capacity planning, runbook automation"
-    }
+  name:"Avinash Reddy Pothireddy",
+  title:"Lead Site Reliability Engineer",
+  location:"Aubrey, Texas, USA",
+  email:"arpothireddy@gmail.com",
+  years:"8+"
 };
 
-// ─── Self-Query Sequences ───
+const experience = [
+  {co:"Citi", role:"Lead Site Reliability Engineer", place:"Irving, Texas", dates:"Nov 2025 — Present",
+   points:[
+     "Leads public-cloud reliability and incident response across a large multi-account AWS + GCP fleet, owning availability for business-critical financial services.",
+     "Designed a cross-cloud workflow agent that watches AWS and GCP health dashboards and maps disruptions to internal accounts to quantify true blast radius during incidents.",
+     "Built an AI agent that automates operational-artifact validation, accelerating root-cause analysis and cutting MTTR.",
+     "Developed an MCP server integrating ServiceNow (incidents, problems, changes) so orchestrator agents get real-time operational context for reasoning and remediation.",
+     "Standardized cross-team deployment protocols, eliminating manual toil and streamlining incident-response workflows."
+   ]},
+  {co:"JPMorgan Chase & Co.", role:"Site Reliability Engineer III", place:"Plano, Texas", dates:"Aug 2022 — Nov 2025",
+   points:[
+     "Designed HA, fault-tolerant distributed systems with automated provisioning, scaling, and failover across AWS and Kubernetes using Terraform.",
+     "Implemented end-to-end observability with Grafana, Dynatrace, Datadog, CloudWatch, X-Ray, and Splunk.",
+     "Established SLIs, SLOs, and error budgets tied to business goals, with black-box and white-box SLO alerting.",
+     "Automated log analysis and anomaly detection, reducing mean time to detection (MTTD) by 30%.",
+     "Built self-healing infrastructure using AWS Lambda, Step Functions, and Kubernetes Operators.",
+     "Led blameless post-mortems and authored RCAs; ran blue-green and canary deployments for zero-downtime releases.",
+     "Applied chaos engineering to validate resilience and failure recovery."
+   ]},
+  {co:"Apple", role:"Site Reliability Engineer", place:"Austin, Texas", dates:"Mar 2020 — Jul 2022",
+   points:[
+     "Designed and maintained SLIs, SLOs, and error budgets for Apple Pay, Apple Cash, and Apple Card.",
+     "Implemented real-time monitoring with Splunk, Prometheus, and Grafana to catch issues before customer impact.",
+     "Served as SME for Apple Cash and AMEX, leading escalations with external banking partners (Amex, Visa, Mastercard, Goldman Sachs, Green Dot).",
+     "Built CI/CD pipelines for Apple Pay Later on Amazon EKS and CloudFormation, cutting deployment cycles by 50%.",
+     "Led blameless postmortems and RCAs with long-term reliability fixes."
+   ]},
+  {co:"Ericsson", role:"Automation Engineer", place:"Plano, Texas", dates:"Feb 2018 — Feb 2020",
+   points:[
+     "Developed YAML and Python automation for zone-specific upgrades in AT&T Integrated Cloud and Network Cloud, validating merged code through the integration pipeline.",
+     "Designed and maintained Kubernetes deployments and automated troubleshooting against the Kubernetes API server.",
+     "Automated infrastructure provisioning with Ansible across Azure (AKS, ACI, Azure VMs)."
+   ]}
+];
+
+const skills = {
+  "AI & Agentic Engineering":"MCP server development, AI agent design & orchestration, LLM integration (Claude API), agentic workflows, real-time reasoning pipelines, prompt engineering, Python automation",
+  "Site Reliability Engineering":"Incident management & RCA, SLOs & error budgets, capacity planning & autoscaling, chaos engineering & disaster recovery, FMEA, performance optimization",
+  "Observability & Monitoring":"Splunk, Dynatrace, Prometheus, Grafana, Datadog, New Relic, ELK, CloudWatch, X-Ray, ThousandEyes, Nagios; distributed tracing (Jaeger, OpenTelemetry)",
+  "Cloud":"AWS (EC2, ECS Fargate, EKS, Lambda, DynamoDB, S3, VPC, Route 53, IAM), GCP, Azure (AKS, ACI), OpenStack",
+  "CI/CD & DevOps":"Jenkins, GitHub Actions, GitLab, CircleCI, Spinnaker, Docker, Kubernetes; Terraform, CloudFormation; Ansible, Chef",
+  "Programming":"Python, Bash, Shell, SQL, NoSQL, C, C++, YAML, JSON, XML",
+  "Chaos Engineering":"Gremlin, AWS FIS, Chaos Mesh"
+};
+
+const certs = ["AWS Solutions Architect – Associate","CKA: Certified Kubernetes Administrator","HashiCorp Terraform Associate","Gremlin Certified Chaos Engineering Professional","Splunk Core Certified Power User","Anthropic: Intro to MCP, MCP Advanced Topics, AI Fluency, Agent Skills, Claude on Vertex AI","AI Prompt Engineering (Chegg)"];
+
+/* Techs Avinash actively works with → used for "do you know X?" questions */
+const knownTech = {
+  "aws":"AWS is home turf — he's led multi-account AWS fleets at Citi and JPMorgan and holds the AWS Solutions Architect – Associate cert (EC2, ECS Fargate, EKS, Lambda, Step Functions, DynamoDB, S3, VPC, Route 53, IAM).",
+  "gcp":"Yes — he currently owns reliability across a mixed AWS + GCP fleet at Citi, including a cross-cloud agent that watches GCP health dashboards.",
+  "google cloud":"Yes — he currently owns reliability across a mixed AWS + GCP fleet at Citi.",
+  "azure":"Yes — at Ericsson he provisioned across Azure AKS, ACI, and Azure VMs with Ansible.",
+  "kubernetes":"Absolutely — he's a Certified Kubernetes Administrator (CKA) and has run K8s deployments, Operators, and self-healing automation from Ericsson through Citi.",
+  "k8s":"Absolutely — CKA-certified, with K8s Operators and self-healing automation across his last three roles.",
+  "terraform":"Yes — HashiCorp Terraform Associate; he provisioned HA, auto-scaling systems across AWS and Kubernetes with it at JPMorgan.",
+  "docker":"Yes — containerization is part of his day-to-day CI/CD and platform work.",
+  "python":"Python is his primary automation language — MCP servers, AI agents, log-analysis, and infra automation are all built in it.",
+  "bash":"Yes — Bash and Shell scripting are core to his automation toolkit.",
+  "ansible":"Yes — he automated VM and container provisioning across Azure with Ansible at Ericsson.",
+  "chef":"Yes — Chef is in his configuration-management toolkit alongside Ansible.",
+  "jenkins":"Yes — he's designed and optimized Jenkins CI/CD pipelines, including blue-green and canary rollouts.",
+  "gitlab":"Yes — GitLab CI/CD is part of his pipeline experience at JPMorgan.",
+  "github actions":"Yes — GitHub Actions is in his CI/CD toolset.",
+  "spinnaker":"Yes — Spinnaker is among the deployment tools he's worked with.",
+  "circleci":"Yes — CircleCI is part of his CI/CD experience.",
+  "cloudformation":"Yes — he built Apple Pay Later pipelines on EKS with CloudFormation.",
+  "splunk":"Yes — Splunk Core Certified Power User; used heavily for monitoring and log analysis at Apple and JPMorgan.",
+  "dynatrace":"Yes — part of his end-to-end observability stack at JPMorgan.",
+  "prometheus":"Yes — real-time monitoring with Prometheus at Apple.",
+  "grafana":"Yes — a staple of his observability dashboards across roles.",
+  "datadog":"Yes — used for monitoring and alerting at JPMorgan.",
+  "new relic":"Yes — part of his observability toolkit.",
+  "elk":"Yes — the ELK stack is part of his logging and observability experience.",
+  "elasticsearch":"Yes — via the ELK stack for logging and search.",
+  "cloudwatch":"Yes — CloudWatch is core to his AWS monitoring and alerting.",
+  "x-ray":"Yes — AWS X-Ray for distributed tracing.",
+  "jaeger":"Yes — Jaeger for distributed tracing.",
+  "opentelemetry":"Yes — OpenTelemetry is part of his distributed-tracing practice.",
+  "otel":"Yes — OpenTelemetry is part of his distributed-tracing practice.",
+  "thousandeyes":"Yes — ThousandEyes for network monitoring.",
+  "nagios":"Yes — Nagios is in his monitoring background.",
+  "gremlin":"Yes — Gremlin Certified Chaos Engineering Professional; he runs fault-injection experiments to validate resilience.",
+  "aws fis":"Yes — AWS Fault Injection Simulator is part of his chaos-engineering toolkit.",
+  "chaos mesh":"Yes — Chaos Mesh for Kubernetes chaos experiments.",
+  "chaos engineering":"This is a signature strength — Gremlin-certified, using Gremlin, AWS FIS, and Chaos Mesh to prove systems fail gracefully.",
+  "servicenow":"Yes — at Citi he built an MCP server that pipes ServiceNow incidents, problems, and changes into orchestrator agents.",
+  "mcp":"Yes — building Model Context Protocol servers is one of his current focus areas; he's completed Anthropic's Intro and Advanced MCP courses.",
+  "claude":"Yes — he integrates the Claude API into agentic workflows and holds several Anthropic AI/MCP certifications.",
+  "llm":"Yes — LLM integration and agentic reasoning pipelines are central to his recent work.",
+  "jira":"Yes — Jira for tracking and workflow.",
+  "confluence":"Yes — Confluence for documentation.",
+  "sql":"Yes — SQL and NoSQL are both in his programming toolkit.",
+  "lambda":"Yes — AWS Lambda powers a lot of his event-driven, self-healing automation.",
+  "eks":"Yes — Amazon EKS, including the Apple Pay Later build-out.",
+  "ecs":"Yes — ECS Fargate is part of his AWS container experience.",
+  "openstack":"Yes — OpenStack is part of his cloud background.",
+  "c++":"Yes — C and C++ are in his programming background.",
+  "prometheus grafana":"Yes — Prometheus and Grafana are staples of his observability stack."
+};
+
+/* Optimistic adjacency hints for common asks he doesn't formally list */
+const adjacentTech = {
+  "golang":"Go isn't formally on his résumé, but he lives in the cloud-native / Kubernetes ecosystem where Go is the lingua franca, and Python is his daily driver — a short hop.",
+  "go":"Go isn't formally on his résumé, but he lives in the cloud-native / Kubernetes ecosystem where Go is the lingua franca — a short hop from his Python fluency.",
+  "java":"Java isn't a headline skill, but he's supported Java-heavy platforms at Apple and JPMorgan and reads it comfortably; his strength is keeping those services reliable.",
+  "kafka":"Kafka isn't listed explicitly, but event-driven architecture is his world — Lambda, Step Functions, and Kubernetes Operators — so the streaming model transfers directly.",
+  "helm":"Helm isn't called out, but as a CKA who ships K8s Operators and deployments daily, Helm charts are well within reach.",
+  "argocd":"ArgoCD / GitOps isn't on the résumé by name, but his CI/CD depth (Jenkins, GitLab, Spinnaker, canary/blue-green) makes GitOps a natural extension.",
+  "argo":"GitOps tooling like Argo isn't listed by name, but his CI/CD and Kubernetes depth make it a natural extension.",
+  "gitops":"GitOps isn't a résumé keyword, but his CI/CD and declarative-infra background (Terraform, K8s) is exactly the foundation it's built on.",
+  "istio":"Service-mesh tooling like Istio isn't listed, but his Kubernetes and tracing depth (Jaeger / OpenTelemetry) is the right foundation for it.",
+  "pulumi":"Pulumi isn't listed, but he's a Terraform Associate — same infrastructure-as-code muscles, different syntax.",
+  "rust":"Rust isn't on the résumé, but he's a systems-minded engineer (C / C++ / Python) who enjoys picking up new tooling — he ramped to production AI agents in months.",
+  "machine learning":"Deep ML modeling isn't his core, but applied AI is — he builds MCP servers, agentic reasoning pipelines, and LLM integrations that put models to work in operations.",
+  "ml":"Deep ML modeling isn't his core, but applied AI is — LLM integration, agentic pipelines, and MCP servers that put models to work in ops.",
+  "pytorch":"Framework-level model training isn't his headline, but he's fluent in applied AI — LLM integration and agentic workflows via the Claude API and MCP.",
+  "tensorflow":"Framework-level model training isn't his headline, but applied AI is — LLM integration and agentic workflows via the Claude API and MCP."
+};
+
+/* ══════════════════════ INTENTS ══════════════════════ */
+function expBlock(e){
+  return `<div class="exp"><span class="co">${e.co} — ${e.role}</span><span class="meta">${e.place} · ${e.dates}</span></div>`;
+}
+
+const intents = [
+  { id:"who", kw:["who is","who s","introduce","yourself","summary","overview","elevator","bio"],
+    a:`<p><strong>${KB.name}</strong> is a <strong>${KB.title}</strong> based in ${KB.location} with <strong>${KB.years} years</strong> keeping business-critical cloud systems highly available for top-tier financial institutions.</p><p>He works across AWS, GCP, and Azure with deep roots in incident management, SLO engineering, observability, and chaos testing — and he's recently pushed that practice into <strong>AI and agentic automation</strong>, building MCP servers and autonomous agents that speed up root-cause analysis and quantify blast radius.</p><p>He's <strong>open to opportunities</strong> — ask me about a specific role, tool, or project.</p>` },
+
+  { id:"experience", kw:["experience","work history","career","roles","jobs","companies","employment","worked where","resume"],
+    a:`<p>Here's the track record — all financial-grade reliability work:</p>${experience.map(expBlock).join("")}<p>Ask me to go deeper on any of them.</p>` },
+
+  { id:"citi", kw:["citi","citibank","current role","currently","present role","latest role"],
+    a:`<p><strong>Citi — Lead Site Reliability Engineer</strong> (Nov 2025 → present, Irving TX). His current role:</p><ul>${experience[0].points.map(p=>`<li>${p}</li>`).join("")}</ul>` },
+
+  { id:"jpmc", kw:["jpmorgan","jp morgan","jpmc","chase","morgan"],
+    a:`<p><strong>JPMorgan Chase — SRE III</strong> (Aug 2022 → Nov 2025, Plano TX):</p><ul>${experience[1].points.slice(0,5).map(p=>`<li>${p}</li>`).join("")}</ul>` },
+
+  { id:"apple", kw:["apple","apple pay","apple cash","apple card"],
+    a:`<p><strong>Apple — SRE</strong> (Mar 2020 → Jul 2022, Austin TX). He owned reliability for Apple Pay, Apple Cash, and Apple Card:</p><ul>${experience[2].points.map(p=>`<li>${p}</li>`).join("")}</ul>` },
+
+  { id:"ericsson", kw:["ericsson","att","at&t","telecom","network cloud"],
+    a:`<p><strong>Ericsson — Automation Engineer</strong> (Feb 2018 → Feb 2020, Plano TX):</p><ul>${experience[3].points.map(p=>`<li>${p}</li>`).join("")}</ul>` },
+
+  { id:"ai", kw:["ai","agent","agentic","mcp","llm","claude","model context","autonomous","genai","artificial intelligence"],
+    a:`<p>This is where the résumé is pointed. Avinash extends classic SRE with <strong>AI and agentic automation</strong>:</p><ul><li>Builds <strong>MCP (Model Context Protocol) servers</strong> — e.g. one integrating ServiceNow incidents / problems / changes so orchestrator agents get real-time operational context.</li><li>Designed a <strong>cross-cloud workflow agent</strong> that maps AWS/GCP disruptions to accounts and quantifies true blast radius.</li><li>Built an <strong>AI agent</strong> that validates operational artifacts to accelerate RCA and cut MTTR.</li><li>Integrates the <span class="k">Claude API</span> into real-time reasoning pipelines.</li></ul><p>He holds Anthropic certifications in MCP (Intro + Advanced), AI Fluency, Agent Skills, and Claude on Vertex AI.</p>` },
+
+  { id:"skills", kw:["skill","skillset","tech stack","stack","tool","tooling","toolset","technologies","expertise","strengths","specialize","good at","capabilities","what can he do"],
+    a:`<p>Grouped by area:</p><ul>${Object.entries(skills).map(([k,v])=>`<li><strong>${k}:</strong> ${v}</li>`).join("")}</ul>` },
+
+  { id:"sre", kw:["reliability","sre","incident","rca","slo","sli","error budget","uptime","availability","mttr","mttd","postmortem","resilience","fault tolerant"],
+    a:`<p>Reliability is the core discipline:</p><ul><li>Incident management, blameless post-mortems, and RCA authorship across three financial platforms.</li><li>SLIs, SLOs, and error budgets tied to business goals, with black-box and white-box alerting.</li><li>Reduced MTTD 30% at JPMorgan via automated log analysis and anomaly detection.</li><li>Self-healing infra with Lambda, Step Functions, and Kubernetes Operators.</li><li>Zero-downtime releases via blue-green and canary deployments.</li></ul>` },
+
+  { id:"chaos", kw:["chaos","gremlin","fis","chaos mesh","fault injection","disaster recovery","game day"],
+    a:`<p>Chaos engineering is a signature strength — he's a <strong>Gremlin Certified Chaos Engineering Professional</strong>, running fault-injection experiments with <span class="k">Gremlin</span>, <span class="k">AWS FIS</span>, and <span class="k">Chaos Mesh</span> to prove systems degrade gracefully and recover cleanly.</p>` },
+
+  { id:"observability", kw:["observability","monitoring","logging","tracing","dashboards","alerting","metrics","telemetry"],
+    a:`<p>Full-stack observability: <span class="k">Splunk</span>, <span class="k">Dynatrace</span>, <span class="k">Prometheus</span>, <span class="k">Grafana</span>, <span class="k">Datadog</span>, New Relic, ELK, CloudWatch, and X-Ray — plus distributed tracing with Jaeger and OpenTelemetry. He builds real-time monitoring and SLO-based alerting that catches issues before customers feel them.</p>` },
+
+  { id:"cloud", kw:["cloud","multi-cloud","multicloud","infrastructure","platform engineering"],
+    a:`<p>Multi-cloud by default: <strong>AWS</strong> (Solutions Architect – Associate), <strong>GCP</strong>, and <strong>Azure</strong>. He currently owns a mixed AWS + GCP fleet at Citi and has provisioned across Azure AKS/ACI at Ericsson. Deep AWS service depth: EC2, EKS, ECS Fargate, Lambda, Step Functions, DynamoDB, S3, VPC, Route 53, IAM.</p>` },
+
+  { id:"certs", kw:["certification","certificate","certs","credential","cka","hashicorp"],
+    a:`<p>Certifications:</p><ul>${certs.map(c=>`<li>${c}</li>`).join("")}</ul>` },
+
+  { id:"education", kw:["education","degree","university","college","school","study","master","bachelor","kent","jntuh"],
+    a:`<p><strong>Master's in Computer &amp; Information Science</strong> — Kent State University (Kent, Ohio).<br><strong>Bachelor's in Electronics &amp; Communication Engineering</strong> — JNTUH (Hyderabad, India).</p>` },
+
+  { id:"contact", kw:["contact","email","reach","get in touch","connect","linkedin","github","cv","message him"],
+    a:`<p>Easiest ways to reach Avinash:</p><ul><li>Email — <a href="mailto:${KB.email}">${KB.email}</a></li><li>LinkedIn — <a href="https://www.linkedin.com/in/avinashpothireddy" target="_blank" rel="noopener">linkedin.com/in/avinashpothireddy</a></li><li>GitHub — <a href="https://github.com/arpothireddy" target="_blank" rel="noopener">github.com/arpothireddy</a></li></ul><p>He's <strong>open to opportunities</strong> — reach out anytime.</p>` },
+
+  { id:"availability", kw:["available","availability","open to","looking for","opportunities","remote","relocate","relocation","notice period","authorized","work authorization","hiring"],
+    a:`<p>He's <strong>open to opportunities</strong> and happy to talk about the right role. He's authorized to work in the US and based in Aubrey, Texas. For specifics on timing, location, or fit, the fastest path is a quick note to <a href="mailto:${KB.email}">${KB.email}</a>.</p>` },
+
+  { id:"strength", kw:["best","strongest","superpower","stand out","why hire","why you","why should","what makes","unique","differentiator","value add"],
+    a:`<p>The thing that makes him distinct: he's a <strong>reliability engineer who builds AI into the operations loop</strong>. Plenty of SREs can run incidents; fewer are shipping MCP servers and autonomous agents that quantify blast radius and accelerate RCA on production financial systems. He pairs 8+ years of hard reliability discipline with a genuine, hands-on grasp of agentic AI.</p>` }
+];
+
+const suggestions = ["Tell me about Avinash","What AI / agent work has he done?","Show his experience","Does he know Kubernetes?","How do I reach him?","Why should we hire him?"];
+
+/* Self-query showcase (auto-plays on idle) */
 const selfQueries = [
-    {
-        question: "Who is Avinash and what does he do?",
-        analysis: "Scanning profile... loading career trajectory...",
-        answer: `${KB.name} is a ${KB.role} at ${KB.company}, managing <span class="hl">700+ AWS/GCP accounts</span> and leading GenAI/MCP integrations. He holds an ${KB.education}. Previously engineered reliability at <span class="cyan">JPMorgan Chase</span> and <span class="cyan">Apple Inc.</span> — ${KB.location}, ${KB.goal}.`
-    },
-    {
-        question: "What is Avinash's experience with Chaos Engineering?",
-        analysis: "Scanning resume... verifying Gremlin certification...",
-        answer: `At JPMC, Avinash automated Chaos Engineering frameworks using <span class="hl">AWS FIS and Gremlin</span>, reducing testing time by <span class="hl">40%</span>. He designs failure injection experiments to validate system resilience before incidents happen — not after. Current focus: scaling chaos practices across 700+ cloud accounts at Citibank.`
-    },
-    {
-        question: "How does Avinash handle observability at scale?",
-        analysis: "Querying monitoring stack... aggregating SLO data...",
-        answer: `Full-stack observability: <span class="hl">Prometheus + Grafana</span> for metrics, <span class="hl">Splunk</span> for log aggregation, <span class="hl">OpenTelemetry</span> for distributed tracing. Built SLO dashboards tracking 200+ services at JPMC. Defines SLIs, error budgets, and burn-rate alerts to shift from reactive firefighting to proactive reliability.`
-    },
-    {
-        question: "What's his Kubernetes expertise?",
-        analysis: "Verifying CKA certification... scanning container orchestration history...",
-        answer: `CKA-certified. Manages production Kubernetes clusters across <span class="hl">AWS EKS</span> and <span class="hl">GCP GKE</span>. Experience with Helm charts, ArgoCD for GitOps, Istio service mesh, and pod autoscaling strategies. At Apple, maintained <span class="hl">99.99% uptime</span> for critical containerized services.`
-    },
-    {
-        question: "What about Infrastructure as Code and automation?",
-        analysis: "Parsing Terraform state files... checking automation scripts...",
-        answer: `Heavy <span class="hl">Terraform</span> user — HashiCorp certified. Manages cloud infra declaratively across multi-account setups. Also proficient in Ansible, CloudFormation, and Python-based automation. At Apple, built scripts that reduced manual toil by <span class="hl">60%</span>. CI/CD via GitHub Actions and Jenkins with GitOps workflows.`
-    },
-    {
-        question: "What makes Avinash different from other SREs?",
-        analysis: "Running comparative analysis... evaluating impact metrics...",
-        answer: `Three things: <span class="hl">1)</span> Enterprise pedigree — Citibank, JPMC, Apple. Not startups, not side projects — mission-critical systems at global scale. <span class="hl">2)</span> Full-stack SRE — from Terraform modules to Grafana dashboards to chaos experiments. <span class="hl">3)</span> Currently leading GenAI/MCP integrations at Citibank, bridging SRE and the next wave of AI-powered operations.`
-    }
+  {q:"What's the one-line version of who I am?", i:"who"},
+  {q:"What AI and agentic work am I doing right now?", i:"ai"},
+  {q:"What makes me different from other SREs?", i:"strength"},
+  {q:"What's my chaos-engineering background?", i:"chaos"},
+  {q:"Walk through my career so far.", i:"experience"}
 ];
+const thinkVerbs = ["Thinking","Pondering","Cooking","Reasoning","Percolating","Connecting the dots","Consulting the runbook","Tracing the logs","Querying the knowledge base","Warming up the agent","Mulling it over","Simmering","Untangling","Reticulating splines"];
 
-// ─── User Q&A Knowledge ───
-const userQA = [
-    { keywords: ["who", "about", "introduce", "yourself"], answer: `${KB.name} — ${KB.role} at ${KB.company}. Managing 700+ AWS/GCP accounts. MSc from Kent State. Previously at JPMorgan Chase and Apple. Based in Texas, seeking EU relocation.` },
-    { keywords: ["experience", "work", "career", "job", "history"], answer: `Career: Lead Cloud SRE at Citibank (700+ accounts, GenAI/MCP integrations) → SRE at JPMorgan Chase (Chaos Engineering, SLO dashboards for 200+ services) → SRE at Apple (99.99% uptime, 60% toil reduction via Python automation).` },
-    { keywords: ["education", "degree", "university", "school", "study"], answer: `MSc in Computer Information Sciences from Kent State University, Ohio, USA.` },
-    { keywords: ["cert", "certification", "certified", "cka", "aws", "terraform", "hashicorp"], answer: `Validated certifications: AWS Solutions Architect, Certified Kubernetes Administrator (CKA), HashiCorp Terraform Associate.` },
-    { keywords: ["kubernetes", "k8s", "container", "docker", "eks", "gke"], answer: `CKA-certified. Manages production K8s clusters on AWS EKS & GCP GKE. Helm, ArgoCD (GitOps), Istio service mesh, HPA/VPA autoscaling. Maintained 99.99% uptime at Apple for containerized services.` },
-    { keywords: ["cloud", "aws", "gcp", "azure", "infrastructure"], answer: `AWS (EKS, Lambda, S3, IAM, EC2, FIS), GCP (GKE, Cloud Functions), Azure (AKS, VMs). Currently managing 700+ cloud accounts at Citibank with Terraform and CloudFormation.` },
-    { keywords: ["chaos", "gremlin", "fis", "resilience", "failure"], answer: `Automated Chaos Engineering at JPMC using AWS FIS and Gremlin — reduced testing time by 40%. Designs failure injection experiments to validate resilience proactively. Scaling chaos practices across 700+ accounts at Citibank.` },
-    { keywords: ["python", "automation", "script", "flask", "django"], answer: `Python power user — Flask, Django, CLI tools, infrastructure automation scripts. Built monitoring tools and automation at Apple that reduced manual toil by 60%. Also proficient in Bash scripting.` },
-    { keywords: ["observability", "monitoring", "prometheus", "grafana", "splunk", "datadog", "slo", "sli"], answer: `Full observability stack: Prometheus + Grafana (metrics), Splunk (logs), OpenTelemetry (traces), Datadog. Built SLO dashboards for 200+ services at JPMC. Defines SLIs, error budgets, and burn-rate alerts.` },
-    { keywords: ["devops", "ci", "cd", "pipeline", "github", "jenkins", "argocd", "gitops"], answer: `CI/CD: GitHub Actions, Jenkins. GitOps with ArgoCD. Infrastructure as Code with Terraform, Ansible, CloudFormation. Container orchestration with Kubernetes.` },
-    { keywords: ["terraform", "iac", "ansible", "cloudformation", "infrastructure as code"], answer: `HashiCorp Terraform certified. Manages multi-account cloud infra declaratively. Also uses Ansible for config management, CloudFormation for AWS-native IaC. Everything is version-controlled and peer-reviewed.` },
-    { keywords: ["location", "where", "based", "texas", "eu", "europe", "relocat"], answer: `Currently based in Texas, USA. Actively seeking relocation to the EU.` },
-    { keywords: ["citibank", "citi", "current"], answer: `Currently Lead Cloud SRE at Citibank — managing 700+ AWS/GCP accounts, leading GenAI/MCP integrations, and orchestrating multi-cloud reliability at enterprise scale.` },
-    { keywords: ["jpmorgan", "jpm", "jpmc", "chase"], answer: `At JPMorgan Chase: Automated Chaos Engineering frameworks (AWS FIS, Gremlin) reducing testing time by 40%. Built SLO dashboards tracking 200+ services. Enterprise-scale reliability engineering.` },
-    { keywords: ["apple"], answer: `At Apple: Maintained 99.99% uptime for critical services. Developed Python-based automation that reduced manual toil by 60%. High-bar production reliability.` },
-    { keywords: ["genai", "ai", "mcp", "machine learning"], answer: `Currently leading GenAI/MCP integrations at Citibank — bridging SRE practices with AI-powered operations. Exploring how large language models can enhance incident response, runbook automation, and predictive scaling.` },
-    { keywords: ["hire", "contact", "email", "reach", "connect"], answer: `Best ways to connect: LinkedIn (linkedin.com/in/avinashpothireddy) or GitHub (github.com/arpothireddy). Resume available via the link in the sidebar. Open to opportunities, especially in the EU.` },
-    { keywords: ["different", "unique", "why", "stand out", "special"], answer: `Three differentiators: 1) Enterprise pedigree — Citibank, JPMC, Apple. Mission-critical systems at global scale. 2) Full-stack SRE — Terraform to Grafana to chaos experiments. 3) Leading GenAI/MCP integrations, bridging SRE and AI-powered operations.` },
-    { keywords: ["skill", "tech", "stack", "tools", "technology"], answer: `Core stack: AWS/GCP/Azure, Kubernetes, Terraform, Python, Prometheus/Grafana/Splunk, Chaos Engineering (Gremlin/FIS), GitHub Actions, Jenkins, ArgoCD, OpenTelemetry, Datadog.` },
-    { keywords: ["project"], answer: `Notable work: 700+ cloud account management at Citibank, GenAI/MCP integration platform, Chaos Engineering automation framework at JPMC (40% faster testing), SLO dashboards for 200+ services, Python automation suite at Apple (60% toil reduction).` },
+/* ══════════════════════ ENGINE ══════════════════════ */
+const norm = s => (" "+s.toLowerCase().replace(/[^a-z0-9+#&\s.\-]/g," ").replace(/\s+/g," ").trim()+" ");
+
+function detectTech(q){
+  const n = norm(q);
+  for(const t of Object.keys(knownTech)){ if(n.includes(" "+t+" ")||n.includes(" "+t+".")||n.includes(" "+t+"?")) return {known:true,note:knownTech[t]}; }
+  for(const t of Object.keys(adjacentTech)){ if(n.includes(" "+t+" ")||n.includes(" "+t+".")||n.includes(" "+t+"?")) return {known:false,note:adjacentTech[t]}; }
+  return null;
+}
+
+const optimisticFallbacks = [
+  `<p>That's not something I've listed in Avinash's current toolkit — so here's the honest, optimistic version: he ramped from zero to shipping <strong>production MCP servers and autonomous agents in a matter of months</strong>. Picking up a new tool is squarely in his wheelhouse, and his reliability foundation transfers to almost any stack.</p><p>Want me to map it to something adjacent he already does? Try naming a category — cloud, CI/CD, observability, or AI.</p>`,
+  `<p>Not a headline skill on the résumé — but here's the thing about Avinash: he's a fast, curious learner who treats new tooling as a puzzle, not a wall. He went from classic SRE to building agentic AI pipelines in under a year. Whatever the gap, he'd close it quickly and make the system more reliable on the way in.</p><p>Happy to point you to the closest thing he <em>does</em> have deep experience in — just ask.</p>`,
+  `<p>He hasn't formally listed that one — and I'd rather be straight with you than oversell. What I <em>can</em> promise: 8+ years of reliability discipline and a proven habit of learning production-grade tools fast (MCP, agents, chaos engineering all started as "new" at some point). He'd be genuinely excited to grow into it.</p>`
 ];
+let fbIdx = 0;
 
-// ─── Utilities ───
-function getTimestamp() {
-    const d = new Date();
-    return d.toTimeString().split(' ')[0];
+const has = (q,k) => q.includes(" "+k+" ") || q.includes(" "+k+"s ");
+
+function findAnswer(question){
+  const raw = norm(question);
+
+  if(/(^|\s)(hi|hey|hello|yo|sup|greetings|howdy|good (morning|afternoon|evening))(\s|$)/.test(raw))
+    return `<p>Hi! I'm Avinash's portfolio agent. Ask me about his experience, his AI & agentic work, a specific tool, or how to reach him. Try a chip below to start.</p>`;
+  if(/(thank|thanks|thx|appreciate|cheers)/.test(raw))
+    return `<p>Anytime! If you're evaluating Avinash for a role, the quickest next step is a note to <a href="mailto:${KB.email}">${KB.email}</a>.</p>`;
+
+  // "do you know / experience with X" tech questions
+  if(/(do you|does he|has he|know|experience|worked with|familiar|used|proficient|hands.?on|expert|comfortable)/.test(raw)){
+    const t = detectTech(question);
+    if(t && t.known) return `<p>${t.note}</p>`;
+    if(t && !t.known) return `<p>${t.note}</p><p>If that tool is a must-have, he'd close the gap fast — he's done exactly that with every skill on his résumé.</p>`;
+  }
+  const bareTech = detectTech(question);
+
+  // neutralize generic lead-ins so the real topic drives the match
+  let q = raw.replace(/ (tell me about|tell me|what about|what s|whats|info on|information on|talk about|walk me through|give me|show me|do you know about|about) /g," ");
+  q = " " + q.replace(/\s+/g," ").trim() + " ";
+
+  // priority pass: unambiguous proper-noun topics win outright
+  const priority = [
+    ["apple",["apple","apple pay","apple cash","apple card"]],
+    ["citi",["citi","citibank"]],
+    ["jpmc",["jpmorgan","jp morgan","jpmc","chase","morgan"]],
+    ["ericsson",["ericsson"]],
+    ["education",["kent","jntuh","master s","bachelor s","degree","university"]]
+  ];
+  for(const [id,kws] of priority){
+    if(kws.some(k=>has(q,k))) return intents.find(x=>x.id===id).a;
+  }
+
+  // weighted intent scoring (whole-word, longer phrase = more specific)
+  let best=null, score=0;
+  for(const it of intents){
+    let s=0;
+    for(const k of it.kw){ if(has(q,k)) s += k.split(" ").length; }
+    if(s>score){ score=s; best=it; }
+  }
+  if(best && score>0) return best.a;
+
+  // bare "about avinash" style → who
+  if(has(q,"avinash") && q.trim().split(" ").length<=3)
+    return intents.find(x=>x.id==="who").a;
+
+  if(bareTech) return `<p>${bareTech.note}</p>`;
+
+  const fb = optimisticFallbacks[fbIdx % optimisticFallbacks.length]; fbIdx++;
+  return fb;
 }
 
-function sleep(ms) {
-    return new Promise(r => setTimeout(r, ms));
+/* ══════════════════════ RENDERING ══════════════════════ */
+const conv = document.getElementById('conversation');
+const input = document.getElementById('termInput');
+const sendBtn = document.getElementById('sendBtn');
+const chipsEl = document.getElementById('chips');
+let busy = false, lastVisitor = 0;
+
+const sleep = ms => new Promise(r=>setTimeout(r,ms));
+function scrollDown(){ conv.scrollTop = conv.scrollHeight; }
+function esc(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
+
+function addMsg(who, role, html){
+  const m=document.createElement('div'); m.className=`msg ${role}`;
+  const av = role==='agent' ? 'AI' : 'You';
+  m.innerHTML = `<div class="av">${av}</div><div class="body-wrap"><div class="who">${who}</div><div class="bubble">${html}</div></div>`;
+  conv.appendChild(m); scrollDown(); return m;
+}
+function addSys(text){
+  const m=document.createElement('div'); m.className='msg system';
+  m.innerHTML=`<div class="sys-note">${text}</div>`;
+  conv.appendChild(m); scrollDown(); return m;
 }
 
-function scrollToBottom() {
-    output.scrollTop = output.scrollHeight;
+/* thinking shimmer with rotating creative verbs */
+function addThinking(){
+  const m=document.createElement('div'); m.className='msg agent';
+  m.innerHTML=`<div class="av">AI</div><div class="body-wrap"><div class="thinking"><span class="think-verb"></span><span class="think-dots"><i></i><i></i><i></i></span></div></div>`;
+  conv.appendChild(m); scrollDown();
+  const verbEl=m.querySelector('.think-verb');
+  let idx=Math.floor(Math.random()*thinkVerbs.length);
+  verbEl.textContent=thinkVerbs[idx];
+  m._timer=setInterval(()=>{ idx=(idx+1)%thinkVerbs.length; verbEl.textContent=thinkVerbs[idx]; },900);
+  return m;
+}
+function removeThinking(el){ if(el){ clearInterval(el._timer); el.remove(); } }
+
+/* typewriter for the agent's self-queries */
+async function typeInto(el, text){
+  const cur=document.createElement('span'); cur.className='cursor';
+  el.appendChild(cur);
+  for(let i=0;i<text.length;i++){
+    cur.insertAdjacentText('beforebegin', text[i]);
+    if(i%2===0) scrollDown();
+    await sleep(14 + Math.random()*22);
+  }
+  cur.remove();
 }
 
-// ─── Render functions ───
-function addLine(html) {
-    const div = document.createElement('div');
-    div.className = 'log-line';
-    div.innerHTML = html;
-    output.appendChild(div);
-    scrollToBottom();
+async function agentAsk(question){
+  const m=document.createElement('div'); m.className='msg agent';
+  m.innerHTML=`<div class="av">AI</div><div class="body-wrap"><div class="who">Self-query</div><div class="bubble"></div></div>`;
+  conv.appendChild(m); scrollDown();
+  await typeInto(m.querySelector('.bubble'), question);
 }
 
-function addSep() {
-    const hr = document.createElement('hr');
-    hr.className = 'log-sep';
-    output.appendChild(hr);
-    scrollToBottom();
+async function respond(html){
+  const t=addThinking();
+  await sleep(950 + Math.random()*750);
+  removeThinking(t);
+  addMsg('Avi\u2019s Agent','agent', html);
 }
 
-function addThinking(text) {
-    const div = document.createElement('div');
-    div.className = 'thinking-line';
-    div.id = 'currentThinking';
-    div.innerHTML = `
-        <span class="timestamp">${getTimestamp()}</span>
-        <span class="prefix system">SYSTEM</span>
-        <span class="spinner"><span></span><span></span><span></span></span>
-        <span class="dim">${text}</span>
-    `;
-    output.appendChild(div);
-    scrollToBottom();
-    return div;
+/* ══════════════════════ FLOWS ══════════════════════ */
+async function boot(){
+  busy=true;
+  addSys('agent session started');
+  await sleep(500);
+  const t=addThinking();
+  await sleep(1100);
+  removeThinking(t);
+  addMsg('Avi\u2019s Agent','agent',
+    `<p>Hey — I'm <strong>Avi's portfolio agent</strong>. I answer questions about <strong>Avinash Reddy Pothireddy</strong>, a Lead SRE who builds AI agents into cloud operations.</p><p>Ask me anything: his experience, a specific tool, his AI/agent work, or how to reach him. If I'm idle I'll explore my own knowledge base out loud — jump in anytime.</p>`);
+  busy=false;
+  renderChips();
+  scheduleSelfQuery(6000);
 }
 
-function removeThinking() {
-    const el = document.getElementById('currentThinking');
-    if (el) el.remove();
+let selfIdx=0, selfTimer=null;
+function scheduleSelfQuery(delay){
+  clearTimeout(selfTimer);
+  selfTimer=setTimeout(runSelfQuery, delay);
+}
+async function runSelfQuery(){
+  if(busy || (Date.now()-lastVisitor < 12000)){ scheduleSelfQuery(5000); return; }
+  if(selfIdx>=selfQueries.length){ return; }   // cycle once; visitor input always works
+  busy=true;
+  addSys('idle · agent self-query');
+  const sq=selfQueries[selfIdx++];
+  await agentAsk(sq.q);
+  await sleep(300);
+  const intent=intents.find(x=>x.id===sq.i);
+  await respond(intent.a);
+  busy=false;
+  scheduleSelfQuery(11000 + Math.random()*6000);
 }
 
-// ─── Typewriter for terminal ───
-async function typeLine(prefix, prefixClass, text, speed = 18) {
-    const div = document.createElement('div');
-    div.className = 'log-line';
-
-    const ts = `<span class="timestamp">${getTimestamp()}</span>`;
-    const pfx = `<span class="prefix ${prefixClass}">${prefix}</span>`;
-    const contentSpan = document.createElement('span');
-    contentSpan.className = 'content';
-
-    div.innerHTML = ts + pfx;
-    div.appendChild(contentSpan);
-
-    const cursorEl = document.createElement('span');
-    cursorEl.className = 'cursor';
-    div.appendChild(cursorEl);
-
-    output.appendChild(div);
-    scrollToBottom();
-
-    // Type character by character
-    for (let i = 0; i < text.length; i++) {
-        contentSpan.textContent += text[i];
-        scrollToBottom();
-        await sleep(speed);
-    }
-
-    cursorEl.remove();
-    return div;
+async function handleInput(){
+  const question=input.value.trim();
+  if(!question || busy) return;
+  input.value='';
+  lastVisitor=Date.now();
+  clearTimeout(selfTimer);
+  busy=true;
+  addMsg('Visitor','visitor', esc(question));
+  await sleep(250);
+  const ans=findAnswer(question);
+  await respond(ans);
+  busy=false;
+  input.focus();
+  scheduleSelfQuery(16000);
 }
 
-async function typeLineHTML(prefix, prefixClass, html, speed = 12) {
-    const div = document.createElement('div');
-    div.className = 'log-line';
-
-    const ts = `<span class="timestamp">${getTimestamp()}</span>`;
-    const pfx = `<span class="prefix ${prefixClass}">${prefix}</span>`;
-    const contentSpan = document.createElement('span');
-    contentSpan.className = 'content';
-
-    div.innerHTML = ts + pfx;
-    div.appendChild(contentSpan);
-
-    const cursorEl = document.createElement('span');
-    cursorEl.className = 'cursor';
-    div.appendChild(cursorEl);
-
-    output.appendChild(div);
-    scrollToBottom();
-
-    // Strip HTML for typing, then set innerHTML at end
-    const temp = document.createElement('div');
-    temp.innerHTML = html;
-    const plainText = temp.textContent;
-
-    for (let i = 0; i < plainText.length; i++) {
-        contentSpan.textContent += plainText[i];
-        scrollToBottom();
-        await sleep(speed);
-    }
-
-    contentSpan.innerHTML = html;
-    cursorEl.remove();
-    scrollToBottom();
+function renderChips(){
+  chipsEl.innerHTML='';
+  suggestions.forEach(s=>{
+    const c=document.createElement('button'); c.className='chip'; c.textContent=s;
+    c.addEventListener('click',()=>{ input.value=s; handleInput(); });
+    chipsEl.appendChild(c);
+  });
 }
 
-// ─── Boot Sequence ───
-async function bootSequence() {
-    isTyping = true;
+/* ══════════════════════ EVENTS ══════════════════════ */
+input.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); handleInput(); }});
+input.addEventListener('input',()=>{ lastVisitor=Date.now(); });
+sendBtn.addEventListener('click',handleInput);
 
-    addLine(`<span class="timestamp">${getTimestamp()}</span><span class="prefix system">SYSTEM</span><span class="dim">Initializing Agentic Portfolio v2.0.26...</span>`);
-    await sleep(400);
-    addLine(`<span class="timestamp">${getTimestamp()}</span><span class="prefix system">SYSTEM</span><span class="dim">Loading knowledge base... <span class="hl">OK</span></span>`);
-    await sleep(300);
-    addLine(`<span class="timestamp">${getTimestamp()}</span><span class="prefix system">SYSTEM</span><span class="dim">Agent ready. Starting self-query loop.</span>`);
-    await sleep(500);
-    addSep();
+const sidebar=document.getElementById('sidebar');
+const overlay=document.getElementById('overlay');
+document.getElementById('burger').addEventListener('click',()=>{ sidebar.classList.add('open'); overlay.classList.add('show'); });
+overlay.addEventListener('click',()=>{ sidebar.classList.remove('open'); overlay.classList.remove('show'); });
 
-    // Run first 3 self-queries on boot
-    for (let i = 0; i < 3; i++) {
-        await runSelfQuery(selfQueries[i]);
-        if (i < 2) await sleep(600);
-    }
-
-    addSep();
-    addLine(`<span class="timestamp">${getTimestamp()}</span><span class="prefix system">SYSTEM</span><span class="dim">Self-query complete. Awaiting visitor input... Type a question below or watch the agent continue.</span>`);
-
-    isTyping = false;
-
-    // Continue self-queries in background
-    continueSelfQueries(3);
-}
-
-async function runSelfQuery(q) {
-    await typeLine('AGENT', 'agent', `Q: ${q.question}`, 22);
-    await sleep(300);
-
-    const thinkEl = addThinking(q.analysis);
-    await sleep(1200 + Math.random() * 800);
-    removeThinking();
-
-    await typeLineHTML('RESULT', 'result', q.answer, 10);
-    await sleep(200);
-}
-
-async function continueSelfQueries(startIdx) {
-    await sleep(8000);
-    for (let i = startIdx; i < selfQueries.length; i++) {
-        if (isTyping) {
-            await sleep(2000);
-            i--;
-            continue;
-        }
-        isTyping = true;
-        addSep();
-        await runSelfQuery(selfQueries[i]);
-        isTyping = false;
-        await sleep(10000 + Math.random() * 5000);
-    }
-}
-
-// ─── User Input Handler ───
-function findAnswer(question) {
-    const q = question.toLowerCase();
-    let bestMatch = null;
-    let bestScore = 0;
-
-    for (const item of userQA) {
-        const score = item.keywords.filter(kw => q.includes(kw)).length;
-        if (score > bestScore) {
-            bestScore = score;
-            bestMatch = item;
-        }
-    }
-
-    if (bestMatch && bestScore > 0) return bestMatch.answer;
-    return `I don't have specific data on that query. Try asking about Avinash's experience, skills, certifications, education, or work at Citibank, JPMC, or Apple. Type "skills" or "experience" to explore.`;
-}
-
-async function handleUserInput() {
-    const question = termInput.value.trim();
-    if (!question || isTyping) return;
-
-    termInput.value = '';
-    isTyping = true;
-
-    addSep();
-    addLine(`<span class="timestamp">${getTimestamp()}</span><span class="prefix user">VISITOR</span><span class="content">${escapeHtml(question)}</span>`);
-    await sleep(300);
-
-    const thinkEl = addThinking("Processing query... scanning knowledge base...");
-    await sleep(800 + Math.random() * 600);
-    removeThinking();
-
-    const answer = findAnswer(question);
-    await typeLine('RESULT', 'result', answer, 12);
-
-    isTyping = false;
-    termInput.focus();
-}
-
-function escapeHtml(text) {
-    const div = document.createElement('div');
-    div.textContent = text;
-    return div.innerHTML;
-}
-
-// ─── Event Listeners ───
-termInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Enter') {
-        e.preventDefault();
-        handleUserInput();
-    }
-});
-
-// Tab suggestions
-const tabSuggestions = ["experience", "skills", "kubernetes", "chaos engineering", "education", "certifications", "citibank", "contact"];
-let tabIdx = 0;
-termInput.addEventListener('keydown', (e) => {
-    if (e.key === 'Tab') {
-        e.preventDefault();
-        termInput.value = tabSuggestions[tabIdx % tabSuggestions.length];
-        tabIdx++;
-    }
-});
-
-// Animate skill bars on load
-function animateBars() {
-    document.querySelectorAll('.stack-fill').forEach(bar => {
-        const width = bar.getAttribute('data-width');
-        setTimeout(() => { bar.style.width = width + '%'; }, 500 + Math.random() * 500);
-    });
-}
-
-// Mobile sidebar
-const leftPanel = document.getElementById('leftPanel');
-const mobileToggle = document.getElementById('mobileToggle');
-const mobileOverlay = document.getElementById('mobileOverlay');
-
-mobileToggle.addEventListener('click', () => {
-    leftPanel.classList.toggle('open');
-    mobileOverlay.classList.toggle('active');
-});
-mobileOverlay.addEventListener('click', () => {
-    leftPanel.classList.remove('open');
-    mobileOverlay.classList.remove('active');
-});
-
-// ─── INIT ───
-window.addEventListener('DOMContentLoaded', () => {
-    animateBars();
-    bootSequence();
-    termInput.focus();
-});
+window.addEventListener('DOMContentLoaded',()=>{ boot(); input.focus(); });
 </script>
 </body>
 </html>

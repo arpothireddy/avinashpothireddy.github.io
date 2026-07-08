@@ -150,14 +150,9 @@
     border-radius:14px;border-top-right-radius:5px;
   }
   /* Agent replies: flat & uniform — no card contrast */
-  .msg.agent:not(.selfquery) .bubble{
+  .msg.agent .bubble{
     background:transparent;border-color:transparent;
     padding-left:0;padding-right:0;
-  }
-  /* Distinct treatment ONLY for self-queries (same warm tint as visitor questions) */
-  .msg.selfquery .bubble{
-    background:var(--clay-tint);border:1px solid #ecd9cd;color:#5c3a28;
-    border-radius:14px;
   }
   .bubble p{margin:0 0 9px}
   .bubble p:last-child{margin-bottom:0}
@@ -227,6 +222,41 @@
   .send:disabled{background:#d8d2c4;cursor:default}
   .send svg{width:18px;height:18px;color:#fff}
   .foot-hint{font-size:11px;color:var(--ink-3);text-align:center;margin-top:10px}
+
+  /* mode toggle + JD fit panel */
+  .mode-toggle{display:flex;gap:6px;margin-bottom:12px}
+  .mode-btn{
+    font-size:12.5px;font-weight:500;color:var(--ink-2);background:var(--surface);
+    border:1px solid var(--line);padding:7px 14px;border-radius:999px;cursor:pointer;
+    transition:all .15s;
+  }
+  .mode-btn:hover{border-color:var(--clay);color:var(--clay-deep)}
+  .mode-btn.active{background:var(--clay);border-color:var(--clay);color:#fff}
+  .jd-row{
+    display:flex;flex-direction:column;gap:10px;background:var(--surface);
+    border:1px solid var(--line-2);border-radius:14px;padding:12px 14px;
+    transition:border-color .15s,box-shadow .15s;
+  }
+  .jd-row:focus-within{border-color:var(--clay);box-shadow:0 0 0 3px rgba(217,119,87,.12)}
+  #jdInput{
+    border:none;background:none;outline:none;resize:vertical;min-height:88px;
+    font-family:var(--sans);font-size:14px;color:var(--ink);line-height:1.5;
+  }
+  #jdInput::placeholder{color:var(--ink-3)}
+  .jd-actions{display:flex;justify-content:flex-end}
+  .jd-submit{
+    font-size:13px;font-weight:500;color:#fff;background:var(--clay);
+    border:none;padding:8px 16px;border-radius:10px;cursor:pointer;
+    transition:background .15s,transform .1s;
+  }
+  .jd-submit:hover{background:var(--clay-deep)}
+  .jd-submit:active{transform:scale(.97)}
+  .jd-submit:disabled{background:#d8d2c4;cursor:default}
+  .fit-score{
+    display:inline-block;font-family:var(--mono);font-size:12.5px;font-weight:500;
+    color:var(--clay-deep);background:var(--clay-tint);
+    padding:5px 12px;border-radius:999px;margin-bottom:9px;
+  }
 
   /* mobile */
   .mobile-bar{display:none}
@@ -354,299 +384,88 @@
     <div class="conversation" id="conversation"></div>
 
     <div class="composer">
+      <div class="mode-toggle" id="modeToggle">
+        <button class="mode-btn active" data-mode="chat" type="button">Chat</button>
+        <button class="mode-btn" data-mode="jd" type="button">JD Fit Analyzer</button>
+      </div>
       <div class="chips" id="chips"></div>
-      <div class="input-row">
+      <div class="input-row" id="chatRow">
         <input id="termInput" type="text" placeholder="Ask about experience, AI/agent work, a specific tool…" autocomplete="off">
         <button class="send" id="sendBtn" aria-label="Send">
           <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M5 12h14M13 6l6 6-6 6"/></svg>
         </button>
       </div>
-      <div class="foot-hint">This agent answers from Avinash's résumé — recruiters, ask away.</div>
+      <div class="jd-row" id="jdRow" style="display:none">
+        <textarea id="jdInput" placeholder="Paste a job description to see how Avinash's background fits…"></textarea>
+        <div class="jd-actions">
+          <button class="jd-submit" id="jdSubmit" type="button">Analyze Fit</button>
+        </div>
+      </div>
+      <div class="foot-hint" id="footHint">This agent answers from Avinash's résumé — recruiters, ask away.</div>
     </div>
   </main>
 </div>
 
 <script>
-/* ══════════════════════ KNOWLEDGE BASE (source of truth: résumé) ══════════════════════ */
-const KB = {
-  name:"Avinash Reddy Pothireddy",
-  title:"Lead Site Reliability Engineer",
-  location:"Aubrey, Texas, USA",
-  email:"arpothireddy@gmail.com",
-  years:"8+"
-};
-
-const experience = [
-  {co:"Citi", role:"Lead Site Reliability Engineer", place:"Irving, Texas", dates:"Nov 2025 — Present",
-   points:[
-     "Leads public-cloud reliability and incident response across a large multi-account AWS + GCP fleet, owning availability for business-critical financial services.",
-     "Designed a cross-cloud workflow agent that watches AWS and GCP health dashboards and maps disruptions to internal accounts to quantify true blast radius during incidents.",
-     "Built an AI agent that automates operational-artifact validation, accelerating root-cause analysis and cutting MTTR.",
-     "Developed an MCP server integrating ServiceNow (incidents, problems, changes) so orchestrator agents get real-time operational context for reasoning and remediation.",
-     "Standardized cross-team deployment protocols, eliminating manual toil and streamlining incident-response workflows."
-   ]},
-  {co:"JPMorgan Chase & Co.", role:"Site Reliability Engineer III", place:"Plano, Texas", dates:"Aug 2022 — Nov 2025",
-   points:[
-     "Designed HA, fault-tolerant distributed systems with automated provisioning, scaling, and failover across AWS and Kubernetes using Terraform.",
-     "Implemented end-to-end observability with Grafana, Dynatrace, Datadog, CloudWatch, X-Ray, and Splunk.",
-     "Established SLIs, SLOs, and error budgets tied to business goals, with black-box and white-box SLO alerting.",
-     "Automated log analysis and anomaly detection, reducing mean time to detection (MTTD) by 30%.",
-     "Built self-healing infrastructure using AWS Lambda, Step Functions, and Kubernetes Operators.",
-     "Led blameless post-mortems and authored RCAs; ran blue-green and canary deployments for zero-downtime releases.",
-     "Applied chaos engineering to validate resilience and failure recovery."
-   ]},
-  {co:"Apple", role:"Site Reliability Engineer", place:"Austin, Texas", dates:"Mar 2020 — Jul 2022",
-   points:[
-     "Designed and maintained SLIs, SLOs, and error budgets for Apple Pay, Apple Cash, and Apple Card.",
-     "Implemented real-time monitoring with Splunk, Prometheus, and Grafana to catch issues before customer impact.",
-     "Served as SME for Apple Cash and AMEX, leading escalations with external banking partners (Amex, Visa, Mastercard, Goldman Sachs, Green Dot).",
-     "Built CI/CD pipelines for Apple Pay Later on Amazon EKS and CloudFormation, cutting deployment cycles by 50%.",
-     "Led blameless postmortems and RCAs with long-term reliability fixes."
-   ]},
-  {co:"Ericsson", role:"Automation Engineer", place:"Plano, Texas", dates:"Feb 2018 — Feb 2020",
-   points:[
-     "Developed YAML and Python automation for zone-specific upgrades in AT&T Integrated Cloud and Network Cloud, validating merged code through the integration pipeline.",
-     "Designed and maintained Kubernetes deployments and automated troubleshooting against the Kubernetes API server.",
-     "Automated infrastructure provisioning with Ansible across Azure (AKS, ACI, Azure VMs)."
-   ]}
-];
-
-const skills = {
-  "AI & Agentic Engineering":"MCP server development, AI agent design & orchestration, LLM integration (Claude API), agentic workflows, real-time reasoning pipelines, prompt engineering, Python automation",
-  "Site Reliability Engineering":"Incident management & RCA, SLOs & error budgets, capacity planning & autoscaling, chaos engineering & disaster recovery, FMEA, performance optimization",
-  "Observability & Monitoring":"Splunk, Dynatrace, Prometheus, Grafana, Datadog, New Relic, ELK, CloudWatch, X-Ray, ThousandEyes, Nagios; distributed tracing (Jaeger, OpenTelemetry)",
-  "Cloud":"AWS (EC2, ECS Fargate, EKS, Lambda, DynamoDB, S3, VPC, Route 53, IAM), GCP, Azure (AKS, ACI), OpenStack",
-  "CI/CD & DevOps":"Jenkins, GitHub Actions, GitLab, CircleCI, Spinnaker, Docker, Kubernetes; Terraform, CloudFormation; Ansible, Chef",
-  "Programming":"Python, Bash, Shell, SQL, NoSQL, C, C++, YAML, JSON, XML",
-  "Chaos Engineering":"Gremlin, AWS FIS, Chaos Mesh"
-};
-
-const certs = ["AWS Solutions Architect – Associate","CKA: Certified Kubernetes Administrator","HashiCorp Terraform Associate","Gremlin Certified Chaos Engineering Professional","Splunk Core Certified Power User","Anthropic: Intro to MCP, MCP Advanced Topics, AI Fluency, Agent Skills, Claude on Vertex AI","AI Prompt Engineering (Chegg)"];
-
-/* Techs Avinash actively works with → used for "do you know X?" questions */
-const knownTech = {
-  "aws":"AWS is home turf — he's led multi-account AWS fleets at Citi and JPMorgan and holds the AWS Solutions Architect – Associate cert (EC2, ECS Fargate, EKS, Lambda, Step Functions, DynamoDB, S3, VPC, Route 53, IAM).",
-  "gcp":"Yes — he currently owns reliability across a mixed AWS + GCP fleet at Citi, including a cross-cloud agent that watches GCP health dashboards.",
-  "google cloud":"Yes — he currently owns reliability across a mixed AWS + GCP fleet at Citi.",
-  "azure":"Yes — at Ericsson he provisioned across Azure AKS, ACI, and Azure VMs with Ansible.",
-  "kubernetes":"Absolutely — he's a Certified Kubernetes Administrator (CKA) and has run K8s deployments, Operators, and self-healing automation from Ericsson through Citi.",
-  "k8s":"Absolutely — CKA-certified, with K8s Operators and self-healing automation across his last three roles.",
-  "terraform":"Yes — HashiCorp Terraform Associate; he provisioned HA, auto-scaling systems across AWS and Kubernetes with it at JPMorgan.",
-  "docker":"Yes — containerization is part of his day-to-day CI/CD and platform work.",
-  "python":"Python is his primary automation language — MCP servers, AI agents, log-analysis, and infra automation are all built in it.",
-  "bash":"Yes — Bash and Shell scripting are core to his automation toolkit.",
-  "ansible":"Yes — he automated VM and container provisioning across Azure with Ansible at Ericsson.",
-  "chef":"Yes — Chef is in his configuration-management toolkit alongside Ansible.",
-  "jenkins":"Yes — he's designed and optimized Jenkins CI/CD pipelines, including blue-green and canary rollouts.",
-  "gitlab":"Yes — GitLab CI/CD is part of his pipeline experience at JPMorgan.",
-  "github actions":"Yes — GitHub Actions is in his CI/CD toolset.",
-  "spinnaker":"Yes — Spinnaker is among the deployment tools he's worked with.",
-  "circleci":"Yes — CircleCI is part of his CI/CD experience.",
-  "cloudformation":"Yes — he built Apple Pay Later pipelines on EKS with CloudFormation.",
-  "splunk":"Yes — Splunk Core Certified Power User; used heavily for monitoring and log analysis at Apple and JPMorgan.",
-  "dynatrace":"Yes — part of his end-to-end observability stack at JPMorgan.",
-  "prometheus":"Yes — real-time monitoring with Prometheus at Apple.",
-  "grafana":"Yes — a staple of his observability dashboards across roles.",
-  "datadog":"Yes — used for monitoring and alerting at JPMorgan.",
-  "new relic":"Yes — part of his observability toolkit.",
-  "elk":"Yes — the ELK stack is part of his logging and observability experience.",
-  "elasticsearch":"Yes — via the ELK stack for logging and search.",
-  "cloudwatch":"Yes — CloudWatch is core to his AWS monitoring and alerting.",
-  "x-ray":"Yes — AWS X-Ray for distributed tracing.",
-  "jaeger":"Yes — Jaeger for distributed tracing.",
-  "opentelemetry":"Yes — OpenTelemetry is part of his distributed-tracing practice.",
-  "otel":"Yes — OpenTelemetry is part of his distributed-tracing practice.",
-  "thousandeyes":"Yes — ThousandEyes for network monitoring.",
-  "nagios":"Yes — Nagios is in his monitoring background.",
-  "gremlin":"Yes — Gremlin Certified Chaos Engineering Professional; he runs fault-injection experiments to validate resilience.",
-  "aws fis":"Yes — AWS Fault Injection Simulator is part of his chaos-engineering toolkit.",
-  "chaos mesh":"Yes — Chaos Mesh for Kubernetes chaos experiments.",
-  "chaos engineering":"This is a signature strength — Gremlin-certified, using Gremlin, AWS FIS, and Chaos Mesh to prove systems fail gracefully.",
-  "servicenow":"Yes — at Citi he built an MCP server that pipes ServiceNow incidents, problems, and changes into orchestrator agents.",
-  "mcp":"Yes — building Model Context Protocol servers is one of his current focus areas; he's completed Anthropic's Intro and Advanced MCP courses.",
-  "claude":"Yes — he integrates the Claude API into agentic workflows and holds several Anthropic AI/MCP certifications.",
-  "llm":"Yes — LLM integration and agentic reasoning pipelines are central to his recent work.",
-  "jira":"Yes — Jira for tracking and workflow.",
-  "confluence":"Yes — Confluence for documentation.",
-  "sql":"Yes — SQL and NoSQL are both in his programming toolkit.",
-  "lambda":"Yes — AWS Lambda powers a lot of his event-driven, self-healing automation.",
-  "eks":"Yes — Amazon EKS, including the Apple Pay Later build-out.",
-  "ecs":"Yes — ECS Fargate is part of his AWS container experience.",
-  "openstack":"Yes — OpenStack is part of his cloud background.",
-  "c++":"Yes — C and C++ are in his programming background.",
-  "prometheus grafana":"Yes — Prometheus and Grafana are staples of his observability stack."
-};
-
-/* Optimistic adjacency hints for common asks he doesn't formally list */
-const adjacentTech = {
-  "golang":"Go isn't formally on his résumé, but he lives in the cloud-native / Kubernetes ecosystem where Go is the lingua franca, and Python is his daily driver — a short hop.",
-  "go":"Go isn't formally on his résumé, but he lives in the cloud-native / Kubernetes ecosystem where Go is the lingua franca — a short hop from his Python fluency.",
-  "java":"Java isn't a headline skill, but he's supported Java-heavy platforms at Apple and JPMorgan and reads it comfortably; his strength is keeping those services reliable.",
-  "kafka":"Kafka isn't listed explicitly, but event-driven architecture is his world — Lambda, Step Functions, and Kubernetes Operators — so the streaming model transfers directly.",
-  "helm":"Helm isn't called out, but as a CKA who ships K8s Operators and deployments daily, Helm charts are well within reach.",
-  "argocd":"ArgoCD / GitOps isn't on the résumé by name, but his CI/CD depth (Jenkins, GitLab, Spinnaker, canary/blue-green) makes GitOps a natural extension.",
-  "argo":"GitOps tooling like Argo isn't listed by name, but his CI/CD and Kubernetes depth make it a natural extension.",
-  "gitops":"GitOps isn't a résumé keyword, but his CI/CD and declarative-infra background (Terraform, K8s) is exactly the foundation it's built on.",
-  "istio":"Service-mesh tooling like Istio isn't listed, but his Kubernetes and tracing depth (Jaeger / OpenTelemetry) is the right foundation for it.",
-  "pulumi":"Pulumi isn't listed, but he's a Terraform Associate — same infrastructure-as-code muscles, different syntax.",
-  "rust":"Rust isn't on the résumé, but he's a systems-minded engineer (C / C++ / Python) who enjoys picking up new tooling — he ramped to production AI agents in months.",
-  "machine learning":"Deep ML modeling isn't his core, but applied AI is — he builds MCP servers, agentic reasoning pipelines, and LLM integrations that put models to work in operations.",
-  "ml":"Deep ML modeling isn't his core, but applied AI is — LLM integration, agentic pipelines, and MCP servers that put models to work in ops.",
-  "pytorch":"Framework-level model training isn't his headline, but he's fluent in applied AI — LLM integration and agentic workflows via the Claude API and MCP.",
-  "tensorflow":"Framework-level model training isn't his headline, but applied AI is — LLM integration and agentic workflows via the Claude API and MCP."
-};
-
-/* ══════════════════════ INTENTS ══════════════════════ */
-function expBlock(e){
-  return `<div class="exp"><span class="co">${e.co} — ${e.role}</span><span class="meta">${e.place} · ${e.dates}</span></div>`;
-}
-
-const intents = [
-  { id:"who", kw:["who is","who s","introduce","yourself","summary","overview","elevator","bio"],
-    a:`<p><strong>${KB.name}</strong> is a <strong>${KB.title}</strong> based in ${KB.location} with <strong>${KB.years} years</strong> keeping business-critical cloud systems highly available for top-tier financial institutions.</p><p>He works across AWS, GCP, and Azure with deep roots in incident management, SLO engineering, observability, and chaos testing — and he's recently pushed that practice into <strong>AI and agentic automation</strong>, building MCP servers and autonomous agents that speed up root-cause analysis and quantify blast radius.</p><p>He's <strong>open to opportunities</strong> — ask me about a specific role, tool, or project.</p>` },
-
-  { id:"experience", kw:["experience","work history","career","roles","jobs","companies","employment","worked where","resume"],
-    a:`<p>Here's the track record — all financial-grade reliability work:</p>${experience.map(expBlock).join("")}<p>Ask me to go deeper on any of them.</p>` },
-
-  { id:"citi", kw:["citi","citibank","current role","currently","present role","latest role"],
-    a:`<p><strong>Citi — Lead Site Reliability Engineer</strong> (Nov 2025 → present, Irving TX). His current role:</p><ul>${experience[0].points.map(p=>`<li>${p}</li>`).join("")}</ul>` },
-
-  { id:"jpmc", kw:["jpmorgan","jp morgan","jpmc","chase","morgan"],
-    a:`<p><strong>JPMorgan Chase — SRE III</strong> (Aug 2022 → Nov 2025, Plano TX):</p><ul>${experience[1].points.slice(0,5).map(p=>`<li>${p}</li>`).join("")}</ul>` },
-
-  { id:"apple", kw:["apple","apple pay","apple cash","apple card"],
-    a:`<p><strong>Apple — SRE</strong> (Mar 2020 → Jul 2022, Austin TX). He owned reliability for Apple Pay, Apple Cash, and Apple Card:</p><ul>${experience[2].points.map(p=>`<li>${p}</li>`).join("")}</ul>` },
-
-  { id:"ericsson", kw:["ericsson","att","at&t","telecom","network cloud"],
-    a:`<p><strong>Ericsson — Automation Engineer</strong> (Feb 2018 → Feb 2020, Plano TX):</p><ul>${experience[3].points.map(p=>`<li>${p}</li>`).join("")}</ul>` },
-
-  { id:"ai", kw:["ai","agent","agentic","mcp","llm","claude","model context","autonomous","genai","artificial intelligence"],
-    a:`<p>This is where the résumé is pointed. Avinash extends classic SRE with <strong>AI and agentic automation</strong>:</p><ul><li>Builds <strong>MCP (Model Context Protocol) servers</strong> — e.g. one integrating ServiceNow incidents / problems / changes so orchestrator agents get real-time operational context.</li><li>Designed a <strong>cross-cloud workflow agent</strong> that maps AWS/GCP disruptions to accounts and quantifies true blast radius.</li><li>Built an <strong>AI agent</strong> that validates operational artifacts to accelerate RCA and cut MTTR.</li><li>Integrates the <span class="k">Claude API</span> into real-time reasoning pipelines.</li></ul><p>He holds Anthropic certifications in MCP (Intro + Advanced), AI Fluency, Agent Skills, and Claude on Vertex AI.</p>` },
-
-  { id:"skills", kw:["skill","skillset","tech stack","stack","tool","tooling","toolset","technologies","expertise","strengths","specialize","good at","capabilities","what can he do"],
-    a:`<p>Grouped by area:</p><ul>${Object.entries(skills).map(([k,v])=>`<li><strong>${k}:</strong> ${v}</li>`).join("")}</ul>` },
-
-  { id:"sre", kw:["reliability","sre","incident","rca","slo","sli","error budget","uptime","availability","mttr","mttd","postmortem","resilience","fault tolerant"],
-    a:`<p>Reliability is the core discipline:</p><ul><li>Incident management, blameless post-mortems, and RCA authorship across three financial platforms.</li><li>SLIs, SLOs, and error budgets tied to business goals, with black-box and white-box alerting.</li><li>Reduced MTTD 30% at JPMorgan via automated log analysis and anomaly detection.</li><li>Self-healing infra with Lambda, Step Functions, and Kubernetes Operators.</li><li>Zero-downtime releases via blue-green and canary deployments.</li></ul>` },
-
-  { id:"chaos", kw:["chaos","gremlin","fis","chaos mesh","fault injection","disaster recovery","game day"],
-    a:`<p>Chaos engineering is a signature strength — he's a <strong>Gremlin Certified Chaos Engineering Professional</strong>, running fault-injection experiments with <span class="k">Gremlin</span>, <span class="k">AWS FIS</span>, and <span class="k">Chaos Mesh</span> to prove systems degrade gracefully and recover cleanly.</p>` },
-
-  { id:"observability", kw:["observability","monitoring","logging","tracing","dashboards","alerting","metrics","telemetry"],
-    a:`<p>Full-stack observability: <span class="k">Splunk</span>, <span class="k">Dynatrace</span>, <span class="k">Prometheus</span>, <span class="k">Grafana</span>, <span class="k">Datadog</span>, New Relic, ELK, CloudWatch, and X-Ray — plus distributed tracing with Jaeger and OpenTelemetry. He builds real-time monitoring and SLO-based alerting that catches issues before customers feel them.</p>` },
-
-  { id:"cloud", kw:["cloud","multi-cloud","multicloud","infrastructure","platform engineering"],
-    a:`<p>Multi-cloud by default: <strong>AWS</strong> (Solutions Architect – Associate), <strong>GCP</strong>, and <strong>Azure</strong>. He currently owns a mixed AWS + GCP fleet at Citi and has provisioned across Azure AKS/ACI at Ericsson. Deep AWS service depth: EC2, EKS, ECS Fargate, Lambda, Step Functions, DynamoDB, S3, VPC, Route 53, IAM.</p>` },
-
-  { id:"certs", kw:["certification","certificate","certs","credential","cka","hashicorp"],
-    a:`<p>Certifications:</p><ul>${certs.map(c=>`<li>${c}</li>`).join("")}</ul>` },
-
-  { id:"education", kw:["education","degree","university","college","school","study","master","bachelor","kent","jntuh"],
-    a:`<p><strong>Master's in Computer &amp; Information Science</strong> — Kent State University (Kent, Ohio).<br><strong>Bachelor's in Electronics &amp; Communication Engineering</strong> — JNTUH (Hyderabad, India).</p>` },
-
-  { id:"contact", kw:["contact","email","reach","get in touch","connect","linkedin","github","cv","message him"],
-    a:`<p>Easiest ways to reach Avinash:</p><ul><li>Email — <a href="mailto:${KB.email}">${KB.email}</a></li><li>LinkedIn — <a href="https://www.linkedin.com/in/avinashpothireddy" target="_blank" rel="noopener">linkedin.com/in/avinashpothireddy</a></li><li>GitHub — <a href="https://github.com/arpothireddy" target="_blank" rel="noopener">github.com/arpothireddy</a></li></ul><p>He's <strong>open to opportunities</strong> — reach out anytime.</p>` },
-
-  { id:"availability", kw:["available","availability","open to","looking for","opportunities","remote","relocate","relocation","notice period","authorized","work authorization","hiring"],
-    a:`<p>He's <strong>open to opportunities</strong> and happy to talk about the right role. He's authorized to work in the US and based in Aubrey, Texas. For specifics on timing, location, or fit, the fastest path is a quick note to <a href="mailto:${KB.email}">${KB.email}</a>.</p>` },
-
-  { id:"strength", kw:["best","strongest","superpower","stand out","why hire","why you","why should","what makes","unique","differentiator","value add"],
-    a:`<p>The thing that makes him distinct: he's a <strong>reliability engineer who builds AI into the operations loop</strong>. Plenty of SREs can run incidents; fewer are shipping MCP servers and autonomous agents that quantify blast radius and accelerate RCA on production financial systems. He pairs 8+ years of hard reliability discipline with a genuine, hands-on grasp of agentic AI.</p>` }
-];
+/* Update this after every cloudflared restart — trycloudflare.com URLs are random and change on restart. */
+const API_BASE_URL = "https://amazing-forty-lounge-cars.trycloudflare.com";
 
 const suggestions = ["Tell me about Avinash","What AI / agent work has he done?","Show his experience","Does he know Kubernetes?","How do I reach him?","Why should we hire him?"];
-
-/* Self-query showcase (auto-plays on idle) */
-const selfQueries = [
-  {q:"What's the one-line version of who I am?", i:"who"},
-  {q:"What AI and agentic work am I doing right now?", i:"ai"},
-  {q:"What makes me different from other SREs?", i:"strength"},
-  {q:"What's my chaos-engineering background?", i:"chaos"},
-  {q:"Walk through my career so far.", i:"experience"}
-];
 const thinkVerbs = ["Thinking","Pondering","Cooking","Reasoning","Percolating","Connecting the dots","Consulting the runbook","Tracing the logs","Querying the knowledge base","Warming up the agent","Mulling it over","Simmering","Untangling","Reticulating splines"];
 
-/* ══════════════════════ ENGINE ══════════════════════ */
-const norm = s => (" "+s.toLowerCase().replace(/[^a-z0-9+#&\s.\-]/g," ").replace(/\s+/g," ").trim()+" ");
-
-function detectTech(q){
-  const n = norm(q);
-  for(const t of Object.keys(knownTech)){ if(n.includes(" "+t+" ")||n.includes(" "+t+".")||n.includes(" "+t+"?")) return {known:true,note:knownTech[t]}; }
-  for(const t of Object.keys(adjacentTech)){ if(n.includes(" "+t+" ")||n.includes(" "+t+".")||n.includes(" "+t+"?")) return {known:false,note:adjacentTech[t]}; }
-  return null;
-}
-
-const optimisticFallbacks = [
-  `<p>That's not something I've listed in Avinash's current toolkit — so here's the honest, optimistic version: he ramped from zero to shipping <strong>production MCP servers and autonomous agents in a matter of months</strong>. Picking up a new tool is squarely in his wheelhouse, and his reliability foundation transfers to almost any stack.</p><p>Want me to map it to something adjacent he already does? Try naming a category — cloud, CI/CD, observability, or AI.</p>`,
-  `<p>Not a headline skill on the résumé — but here's the thing about Avinash: he's a fast, curious learner who treats new tooling as a puzzle, not a wall. He went from classic SRE to building agentic AI pipelines in under a year. Whatever the gap, he'd close it quickly and make the system more reliable on the way in.</p><p>Happy to point you to the closest thing he <em>does</em> have deep experience in — just ask.</p>`,
-  `<p>He hasn't formally listed that one — and I'd rather be straight with you than oversell. What I <em>can</em> promise: 8+ years of reliability discipline and a proven habit of learning production-grade tools fast (MCP, agents, chaos engineering all started as "new" at some point). He'd be genuinely excited to grow into it.</p>`
-];
-let fbIdx = 0;
-
-const has = (q,k) => q.includes(" "+k+" ") || q.includes(" "+k+"s ");
-
-function findAnswer(question){
-  const raw = norm(question);
-
-  if(/(^|\s)(hi|hey|hello|yo|sup|greetings|howdy|good (morning|afternoon|evening))(\s|$)/.test(raw))
-    return `<p>Hi! I'm Avinash's portfolio agent. Ask me about his experience, his AI & agentic work, a specific tool, or how to reach him. Try a chip below to start.</p>`;
-  if(/(thank|thanks|thx|appreciate|cheers)/.test(raw))
-    return `<p>Anytime! If you're evaluating Avinash for a role, the quickest next step is a note to <a href="mailto:${KB.email}">${KB.email}</a>.</p>`;
-
-  // "do you know / experience with X" tech questions
-  if(/(do you|does he|has he|know|experience|worked with|familiar|used|proficient|hands.?on|expert|comfortable)/.test(raw)){
-    const t = detectTech(question);
-    if(t && t.known) return `<p>${t.note}</p>`;
-    if(t && !t.known) return `<p>${t.note}</p><p>If that tool is a must-have, he'd close the gap fast — he's done exactly that with every skill on his résumé.</p>`;
-  }
-  const bareTech = detectTech(question);
-
-  // neutralize generic lead-ins so the real topic drives the match
-  let q = raw.replace(/ (tell me about|tell me|what about|what s|whats|info on|information on|talk about|walk me through|give me|show me|do you know about|about) /g," ");
-  q = " " + q.replace(/\s+/g," ").trim() + " ";
-
-  // priority pass: unambiguous proper-noun topics win outright
-  const priority = [
-    ["apple",["apple","apple pay","apple cash","apple card"]],
-    ["citi",["citi","citibank"]],
-    ["jpmc",["jpmorgan","jp morgan","jpmc","chase","morgan"]],
-    ["ericsson",["ericsson"]],
-    ["education",["kent","jntuh","master s","bachelor s","degree","university"]]
-  ];
-  for(const [id,kws] of priority){
-    if(kws.some(k=>has(q,k))) return intents.find(x=>x.id===id).a;
-  }
-
-  // weighted intent scoring (whole-word, longer phrase = more specific)
-  let best=null, score=0;
-  for(const it of intents){
-    let s=0;
-    for(const k of it.kw){ if(has(q,k)) s += k.split(" ").length; }
-    if(s>score){ score=s; best=it; }
-  }
-  if(best && score>0) return best.a;
-
-  // bare "about avinash" style → who
-  if(has(q,"avinash") && q.trim().split(" ").length<=3)
-    return intents.find(x=>x.id==="who").a;
-
-  if(bareTech) return `<p>${bareTech.note}</p>`;
-
-  const fb = optimisticFallbacks[fbIdx % optimisticFallbacks.length]; fbIdx++;
-  return fb;
-}
-
-/* ══════════════════════ RENDERING ══════════════════════ */
+/* ══════════════════════ DOM ══════════════════════ */
 const conv = document.getElementById('conversation');
 const input = document.getElementById('termInput');
 const sendBtn = document.getElementById('sendBtn');
 const chipsEl = document.getElementById('chips');
-let busy = false, lastVisitor = 0;
+const jdInput = document.getElementById('jdInput');
+const jdSubmitBtn = document.getElementById('jdSubmit');
+const chatRow = document.getElementById('chatRow');
+const jdRow = document.getElementById('jdRow');
+const modeToggle = document.getElementById('modeToggle');
+const footHint = document.getElementById('footHint');
+
+let busy = false;
+let mode = 'chat';
+let history = []; // {role:'user'|'agent', content:string}, capped to last 6 turns
 
 const sleep = ms => new Promise(r=>setTimeout(r,ms));
 function scrollDown(){ conv.scrollTop = conv.scrollHeight; }
 function esc(t){ const d=document.createElement('div'); d.textContent=t; return d.innerHTML; }
 
+/* Minimal markdown → the site's existing bubble markup. Escapes first, so
+   nothing the model returns can inject live HTML/script. */
+function mdToHtml(text){
+  let safe = esc(text)
+    .replace(/\*\*(.+?)\*\*/g, '<strong>$1</strong>')
+    .replace(/\[([^\]]+)\]\((https?:\/\/[^\s)]+)\)/g, '<a href="$2" target="_blank" rel="noopener">$1</a>');
+  const lines = safe.split('\n');
+  let html = '', inList = false;
+  for (const line of lines){
+    const m = line.match(/^[-*]\s+(.*)/);
+    if (m){
+      if (!inList){ html += '<ul>'; inList = true; }
+      html += `<li>${m[1]}</li>`;
+    } else {
+      if (inList){ html += '</ul>'; inList = false; }
+      if (line.trim()) html += `<p>${line}</p>`;
+    }
+  }
+  if (inList) html += '</ul>';
+  return html || `<p>${safe}</p>`;
+}
+
+function jdFitHtml(data){
+  const score = Math.max(0, Math.min(100, data.fit_score));
+  const strengths = data.strengths.map(s => `<li>${esc(s)}</li>`).join('');
+  const gaps = data.gaps.map(s => `<li>${esc(s)}</li>`).join('');
+  return `<div class="fit-score">Fit score: ${score}/100</div>
+    <p>${esc(data.summary)}</p>
+    <p><strong>Strengths</strong></p><ul>${strengths}</ul>
+    <p><strong>Gaps</strong></p><ul>${gaps}</ul>`;
+}
+
+/* ══════════════════════ RENDERING ══════════════════════ */
 function addMsg(who, role, html){
   const m=document.createElement('div'); m.className=`msg ${role}`;
   const av = role==='agent' ? 'AI' : 'You';
@@ -658,8 +477,6 @@ function addSys(text){
   m.innerHTML=`<div class="sys-note">${text}</div>`;
   conv.appendChild(m); scrollDown(); return m;
 }
-
-/* thinking shimmer with rotating creative verbs */
 function addThinking(){
   const m=document.createElement('div'); m.className='msg agent';
   m.innerHTML=`<div class="av">AI</div><div class="body-wrap"><div class="thinking"><span class="think-verb"></span><span class="think-dots"><i></i><i></i><i></i></span></div></div>`;
@@ -672,95 +489,103 @@ function addThinking(){
 }
 function removeThinking(el){ if(el){ clearInterval(el._timer); el.remove(); } }
 
-/* typewriter for the agent's self-queries */
-async function typeInto(el, text){
-  const cur=document.createElement('span'); cur.className='cursor';
-  el.appendChild(cur);
-  for(let i=0;i<text.length;i++){
-    cur.insertAdjacentText('beforebegin', text[i]);
-    if(i%2===0) scrollDown();
-    await sleep(14 + Math.random()*22);
-  }
-  cur.remove();
-}
-
-async function agentAsk(question){
-  const m=document.createElement('div'); m.className='msg agent selfquery';
-  m.innerHTML=`<div class="av">AI</div><div class="body-wrap"><div class="who">Self-query</div><div class="bubble"></div></div>`;
-  conv.appendChild(m); scrollDown();
-  await typeInto(m.querySelector('.bubble'), question);
-}
-
-async function respond(html){
-  const t=addThinking();
-  await sleep(950 + Math.random()*750);
-  removeThinking(t);
-  addMsg('Avi\u2019s Agent','agent', html);
-}
+const FALLBACK = `<p>Having trouble reaching the live agent right now — try again in a moment, or email <a href="mailto:arpothireddy@gmail.com">arpothireddy@gmail.com</a> directly.</p>`;
 
 /* ══════════════════════ FLOWS ══════════════════════ */
 async function boot(){
-  busy=true;
   addSys('agent session started');
-  await sleep(500);
-  const t=addThinking();
-  await sleep(1100);
-  removeThinking(t);
-  addMsg('Avi\u2019s Agent','agent',
-    `<p>Hey — I'm <strong>Avi's portfolio agent</strong>. I answer questions about <strong>Avinash Reddy Pothireddy</strong>, a Lead SRE who builds AI agents into cloud operations.</p><p>Ask me anything: his experience, a specific tool, his AI/agent work, or how to reach him. If I'm idle I'll explore my own knowledge base out loud — jump in anytime.</p>`);
-  busy=false;
-  renderChips();
-  scheduleSelfQuery(6000);
-}
-
-let selfIdx=0, selfTimer=null;
-function scheduleSelfQuery(delay){
-  clearTimeout(selfTimer);
-  selfTimer=setTimeout(runSelfQuery, delay);
-}
-async function runSelfQuery(){
-  if(busy || (Date.now()-lastVisitor < 12000)){ scheduleSelfQuery(5000); return; }
-  if(selfIdx>=selfQueries.length){ return; }   // cycle once; visitor input always works
-  busy=true;
-  addSys('idle · agent self-query');
-  const sq=selfQueries[selfIdx++];
-  await agentAsk(sq.q);
   await sleep(300);
-  const intent=intents.find(x=>x.id===sq.i);
-  await respond(intent.a);
-  busy=false;
-  scheduleSelfQuery(11000 + Math.random()*6000);
+  const t=addThinking();
+  await sleep(500);
+  removeThinking(t);
+  addMsg('Avi’s Agent','agent',
+    `<p>Hey — I'm <strong>Avi's portfolio agent</strong>, backed by Gemini. Ask me anything about <strong>Avinash Reddy Pothireddy</strong>, or switch to <strong>JD Fit Analyzer</strong> to paste a job description and see how his background stacks up.</p>`);
+  renderChips();
 }
 
-async function handleInput(){
-  const question=input.value.trim();
-  if(!question || busy) return;
-  input.value='';
-  lastVisitor=Date.now();
-  clearTimeout(selfTimer);
-  busy=true;
+async function handleChatSubmit(){
+  const question = input.value.trim();
+  if (!question || busy) return;
+  input.value = '';
+  busy = true; sendBtn.disabled = true;
   addMsg('Visitor','visitor', esc(question));
-  await sleep(250);
-  const ans=findAnswer(question);
-  await respond(ans);
-  busy=false;
+  const t = addThinking();
+  try{
+    const res = await fetch(`${API_BASE_URL}/api/chat`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({message: question, history})
+    });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+    const data = await res.json();
+    removeThinking(t);
+    addMsg('Avi’s Agent','agent', mdToHtml(data.reply));
+    history.push({role:'user', content:question}, {role:'agent', content:data.reply});
+    if (history.length > 12) history = history.slice(-12);
+  }catch(err){
+    removeThinking(t);
+    addMsg('Avi’s Agent','agent', FALLBACK);
+  }
+  busy = false; sendBtn.disabled = false;
   input.focus();
-  scheduleSelfQuery(16000);
+}
+
+async function handleJdFitSubmit(){
+  const jd = jdInput.value.trim();
+  if (!jd || busy) return;
+  if (jd.length < 20){ addSys('Paste a bit more of the job description (at least 20 characters).'); return; }
+  if (jd.length > 6000){ addSys('That job description is a little long — trim it to under 6000 characters.'); return; }
+  jdInput.value = '';
+  busy = true; jdSubmitBtn.disabled = true;
+  const preview = jd.length > 220 ? jd.slice(0,220) + '…' : jd;
+  addMsg('Visitor','visitor', esc(preview));
+  const t = addThinking();
+  try{
+    const res = await fetch(`${API_BASE_URL}/api/jd-fit`, {
+      method:'POST',
+      headers:{'Content-Type':'application/json'},
+      body: JSON.stringify({jd_text: jd})
+    });
+    if (!res.ok) throw new Error(`status ${res.status}`);
+    const data = await res.json();
+    removeThinking(t);
+    addMsg('Avi’s Agent','agent', jdFitHtml(data));
+  }catch(err){
+    removeThinking(t);
+    addMsg('Avi’s Agent','agent', FALLBACK);
+  }
+  busy = false; jdSubmitBtn.disabled = false;
+  jdInput.focus();
 }
 
 function renderChips(){
   chipsEl.innerHTML='';
   suggestions.forEach(s=>{
     const c=document.createElement('button'); c.className='chip'; c.textContent=s;
-    c.addEventListener('click',()=>{ input.value=s; handleInput(); });
+    c.addEventListener('click',()=>{ input.value=s; handleChatSubmit(); });
     chipsEl.appendChild(c);
   });
 }
 
 /* ══════════════════════ EVENTS ══════════════════════ */
-input.addEventListener('keydown',e=>{ if(e.key==='Enter'){ e.preventDefault(); handleInput(); }});
-input.addEventListener('input',()=>{ lastVisitor=Date.now(); });
-sendBtn.addEventListener('click',handleInput);
+input.addEventListener('keydown', e=>{ if(e.key==='Enter'){ e.preventDefault(); handleChatSubmit(); }});
+sendBtn.addEventListener('click', handleChatSubmit);
+jdInput.addEventListener('keydown', e=>{ if((e.metaKey||e.ctrlKey) && e.key==='Enter'){ e.preventDefault(); handleJdFitSubmit(); }});
+jdSubmitBtn.addEventListener('click', handleJdFitSubmit);
+
+modeToggle.addEventListener('click', e=>{
+  const btn = e.target.closest('.mode-btn');
+  if (!btn || busy) return;
+  mode = btn.dataset.mode;
+  [...modeToggle.children].forEach(b => b.classList.toggle('active', b===btn));
+  chatRow.style.display = mode==='chat' ? 'flex' : 'none';
+  chipsEl.style.display = mode==='chat' ? 'flex' : 'none';
+  jdRow.style.display = mode==='jd' ? 'flex' : 'none';
+  footHint.textContent = mode==='chat'
+    ? "This agent answers from Avinash's résumé — recruiters, ask away."
+    : "Paste a job description to see how Avinash's background fits, powered by Gemini.";
+  (mode==='chat' ? input : jdInput).focus();
+});
 
 const sidebar=document.getElementById('sidebar');
 const overlay=document.getElementById('overlay');

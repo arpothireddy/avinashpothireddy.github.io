@@ -499,7 +499,7 @@ async function boot(){
   await sleep(500);
   removeThinking(t);
   addMsg('Avi’s Agent','agent',
-    `<p>Hey — I'm <strong>Avi's portfolio agent</strong>, backed by Gemini. Ask me anything about <strong>Avinash Reddy Pothireddy</strong>, or switch to <strong>JD Fit Analyzer</strong> to paste a job description and see how his background stacks up.</p>`);
+    `<p>Hey — I'm <strong>Avi's portfolio agent</strong>. Ask me anything about <strong>Avinash Reddy Pothireddy</strong>, or switch to <strong>JD Fit Analyzer</strong> to paste a job description and see how his background stacks up.</p>`);
   renderChips();
 }
 
@@ -583,7 +583,7 @@ modeToggle.addEventListener('click', e=>{
   jdRow.style.display = mode==='jd' ? 'flex' : 'none';
   footHint.textContent = mode==='chat'
     ? "This agent answers from Avinash's résumé — recruiters, ask away."
-    : "Paste a job description to see how Avinash's background fits, powered by Gemini.";
+    : "Paste a job description to see how Avinash's background fits.";
   (mode==='chat' ? input : jdInput).focus();
 });
 
